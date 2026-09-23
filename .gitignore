@@ -30,7 +30,13 @@ test-results
 *.log
 logs
 
+# Nuxt generated
+.nuxtrc
+
 # Editor / OS
 .idea
 .vscode
 .DS_Store
+
+# Local tooling settings (machine-specific)
+.claude/settings.local.json

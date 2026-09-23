@@ -1,0 +1,14 @@
+# Build output & deps
+.nuxt
+.output
+.nitro
+.cache
+dist
+node_modules
+coverage
+
+# Lockfiles & generated
+pnpm-lock.yaml
+
+# Docs are hand-formatted; leave them untouched
+specs
