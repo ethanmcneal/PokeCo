@@ -15,4 +15,12 @@ export const pokemonListQuerySchema = z.object({
 
 export const pokemonNameParamSchema = z.string().trim().min(1)
 
+// Register/login share one shape. Email is normalized (trim + lowercase) before
+// validation so it is stored and looked up consistently.
+export const credentialsSchema = z.object({
+  email: z.string().trim().toLowerCase().pipe(z.email()),
+  password: z.string().min(8, 'Password must be at least 8 characters').max(200),
+})
+
 export type PokemonListQuery = z.infer<typeof pokemonListQuerySchema>
+export type Credentials = z.infer<typeof credentialsSchema>

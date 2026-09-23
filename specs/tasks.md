@@ -69,14 +69,15 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 4 — Authentication
 *Depends on: 1. Spec: [04-api-contract](./04-api-contract.md) (auth), [ADR 0003](./adr/0003-session-auth-strategy.md), [07-security](./07-security.md).*
 
-- [ ] Add `nuxt-auth-utils`; configure session secret
-- [ ] `POST /api/auth/register` (hash password, set session, `409` on duplicate) — AC-4.1
-- [ ] `POST /api/auth/login` (verify, set session, generic `401`) — AC-4.2
-- [ ] `POST /api/auth/logout` (clear session) — AC-4.2
-- [ ] Server auth guard helper → `401` for unauthenticated protected requests — AC-4.3
-- [ ] Cookie/session hardening: httpOnly, `SameSite`, `Secure` in production; generic auth errors (no enumeration) — [07](./07-security.md)
-- [ ] Rate limit `login`/`register` against credential stuffing — [07](./07-security.md)
-- **Done when:** integration tests cover register/login/logout, the guard rejecting anonymous requests, and login returning a generic error.
+- [x] Add `nuxt-auth-utils` (0.5.30); configure session secret via `NUXT_SESSION_PASSWORD`
+- [x] `POST /api/auth/register` (hash password, set session, `409` on duplicate — check + unique-constraint fallback) — AC-4.1
+- [x] `POST /api/auth/login` (verify, set session, generic `401`) — AC-4.2
+- [x] `POST /api/auth/logout` (clear session) — AC-4.2
+- [x] Server auth guard helper (`requireUser`) → `401` for unauthenticated protected requests — AC-4.3
+- [x] Cookie/session hardening: httpOnly + `Secure` (prod) defaults, `SameSite=Lax` explicit, 7-day maxAge; generic auth errors (no enumeration) — [07](./07-security.md)
+- [x] Rate limit `login`/`register` against credential stuffing (in-memory fixed-window; production → shared store) — [07](./07-security.md)
+- [ ] ~~Demo-user seed~~ (deferred from Phase 1): **not built as a DB script** — nuxt-auth-utils' hashing is a Nitro auto-import, not importable standalone, so users are only created through the app's auth path (one hashing source of truth). README documents registering a demo account.
+- **Done when:** integration tests cover register/login/logout, the guard rejecting anonymous requests, and login returning a generic error. ✅ 11 auth tests (rate-limit, guard, register/login/logout, generic-401) — 37 total; also verified live: 201/409/400 register, session persistence, 204 logout + clear, 401 wrong/200 correct login, httpOnly sealed cookie.
 
 ## Phase 5 — Collection API
 *Depends on: 1, 2, 4. Spec: [04-api-contract](./04-api-contract.md).*
