@@ -55,16 +55,16 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] List source selection in the service: default page vs. name lookup (`search`) vs. type members (`type`); search precedence over type
 - [x] Height dm→m and weight hg→kg conversions
 - [x] Hidden-ability flagging
-- [x] **Grass → shiny business rule**: `isGrassType` + `shinySpriteUrl` (null when not grass) — AC-3.4
+- [x] **Shiny-form business rule** (data-driven `SHINY_TYPES`, currently Grass): `hasShinyForm` + `shinySpriteUrl` (null when the rule doesn't apply) — AC-3.4
 - **Done when:** service unit tests pass for grass / grass+secondary / non-grass, unit conversions, and the three list-source branches, with the upstream client mocked. ✅ 9 service tests pass (15 total); typecheck/lint/format green.
 
 ## Phase 3 — Pokémon API endpoints
 *Depends on: 2. Spec: [04-api-contract](./04-api-contract.md).*
 
-- [ ] `GET /api/pokemon` (limit/offset/search/type validated with Zod; unknown `type` → `400`) — AC-1.1, AC-2.1/2.2
-- [ ] `GET /api/pokemon/:name` returning `PokemonDetail`; `404` on unknown — AC-3.1–3.4
-- [ ] Uniform error model via `createError`; no upstream shape leakage
-- **Done when:** integration tests cover validation (`400`, incl. unknown type), not-found (`404`), and happy-path DTO shape (default/search/type) with upstream stubbed.
+- [x] `GET /api/pokemon` (limit/offset/search/type validated with Zod; unknown `type` → `400`) — AC-1.1, AC-2.1/2.2 — type validated against shared `POKEMON_TYPES` enum
+- [x] `GET /api/pokemon/:name` returning `PokemonDetail`; `404` on unknown — AC-3.1–3.4
+- [x] Uniform error model via `createError`; no upstream shape leakage (upstream failures → `502`)
+- **Done when:** integration tests cover validation (`400`, incl. unknown type), not-found (`404`), and happy-path DTO shape (default/search/type) with upstream stubbed. ✅ 11 endpoint tests (26 total); also verified live: list shape, grass→shiny vs non-grass, 400 on bad type, 404 on unknown Pokémon.
 
 ## Phase 4 — Authentication
 *Depends on: 1. Spec: [04-api-contract](./04-api-contract.md) (auth), [ADR 0003](./adr/0003-session-auth-strategy.md), [07-security](./07-security.md).*
@@ -112,7 +112,7 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
 - [ ] `/pokemon/[name]` renders name, height (m), abilities (hidden tagged), types — AC-3.1–3.3
-- [ ] `ShinyImage` shown only when `isGrassType`, clearly labelled — AC-3.4
+- [ ] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
 - [ ] `404` name renders the not-found state
 - **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent).
 

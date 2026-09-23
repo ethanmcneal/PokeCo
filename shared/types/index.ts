@@ -26,9 +26,9 @@ export interface PokemonDetail {
   abilities: Ability[]
   types: string[]
   spriteUrl: string | null
-  /** Result of the Grass → shiny business rule. */
-  isGrassType: boolean
-  /** Populated only when isGrassType is true, otherwise null (AC-3.4). */
+  /** True when this Pokémon's type triggers the shiny-form rule (server SHINY_TYPES). */
+  hasShinyForm: boolean
+  /** The shiny sprite when hasShinyForm and the upstream provides one, else null (AC-3.4). */
   shinySpriteUrl: string | null
 }
 

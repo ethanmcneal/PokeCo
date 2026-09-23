@@ -39,8 +39,8 @@ interface PokemonDetail {
   abilities: Ability[]
   types: string[]
   spriteUrl: string | null
-  isGrassType: boolean       // result of the business rule
-  shinySpriteUrl: string | null   // populated iff isGrassType (else null) — AC-3.4
+  hasShinyForm: boolean      // result of the shiny-form rule (server SHINY_TYPES; currently Grass)
+  shinySpriteUrl: string | null   // populated when hasShinyForm and upstream has one, else null — AC-3.4
 }
 
 interface CollectionEntry {
@@ -99,7 +99,7 @@ The response shape is identical in every case (`Page<PokemonListItem>`).
 ### `GET /api/pokemon/:name`
 Detail for one Pokémon by name (or id).
 
-- **200** → `PokemonDetail`. `shinySpriteUrl` is non-null only for Grass types.
+- **200** → `PokemonDetail`. `hasShinyForm`/`shinySpriteUrl` follow the shiny-form rule (server `SHINY_TYPES`, currently Grass — AC-3.4).
 - **404** if PokéAPI has no such Pokémon.
 
 ```json
@@ -114,7 +114,7 @@ Detail for one Pokémon by name (or id).
   ],
   "types": ["grass", "poison"],
   "spriteUrl": "https://.../1.png",
-  "isGrassType": true,
+  "hasShinyForm": true,
   "shinySpriteUrl": "https://.../shiny/1.png"
 }
 ```
