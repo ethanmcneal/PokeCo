@@ -8,6 +8,8 @@ export default defineVitestConfig({
   test: {
     environment: 'node',
     include: ['tests/unit/**/*.{test,spec}.ts', 'server/**/*.{test,spec}.ts'],
+    // Provides h3/Nitro global doubles so API handler tests run without a server.
+    setupFiles: ['./tests/setup/h3-globals.ts'],
     coverage: {
       provider: 'v8',
       include: ['server/**', 'shared/**'],

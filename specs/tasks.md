@@ -61,10 +61,10 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 3 — Pokémon API endpoints
 *Depends on: 2. Spec: [04-api-contract](./04-api-contract.md).*
 
-- [ ] `GET /api/pokemon` (limit/offset/search/type validated with Zod; unknown `type` → `400`) — AC-1.1, AC-2.1/2.2
-- [ ] `GET /api/pokemon/:name` returning `PokemonDetail`; `404` on unknown — AC-3.1–3.4
-- [ ] Uniform error model via `createError`; no upstream shape leakage
-- **Done when:** integration tests cover validation (`400`, incl. unknown type), not-found (`404`), and happy-path DTO shape (default/search/type) with upstream stubbed.
+- [x] `GET /api/pokemon` (limit/offset/search/type validated with Zod; unknown `type` → `400`) — AC-1.1, AC-2.1/2.2 — type validated against shared `POKEMON_TYPES` enum
+- [x] `GET /api/pokemon/:name` returning `PokemonDetail`; `404` on unknown — AC-3.1–3.4
+- [x] Uniform error model via `createError`; no upstream shape leakage (upstream failures → `502`)
+- **Done when:** integration tests cover validation (`400`, incl. unknown type), not-found (`404`), and happy-path DTO shape (default/search/type) with upstream stubbed. ✅ 11 endpoint tests (26 total); also verified live: list shape, grass→shiny vs non-grass, 400 on bad type, 404 on unknown Pokémon.
 
 ## Phase 4 — Authentication
 *Depends on: 1. Spec: [04-api-contract](./04-api-contract.md) (auth), [ADR 0003](./adr/0003-session-auth-strategy.md), [07-security](./07-security.md).*
