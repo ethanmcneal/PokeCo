@@ -49,14 +49,14 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 2 — PokéAPI integration & caching
 *Depends on: 0. Spec: [02-architecture](./02-architecture.md) (caching), [04-api-contract](./04-api-contract.md) (DTOs).*
 
-- [ ] Implement `server/utils/pokeapi.ts` client (list, detail, and `type/{name}` members fetch) with typed upstream shapes
-- [ ] Add caching (Nitro `cachedFunction` / storage) with a long TTL
-- [ ] Implement `pokemon.service`: map upstream → `PokemonListItem` / `PokemonDetail`
-- [ ] List source selection in the service: default page vs. name lookup (`search`) vs. type members (`type`)
-- [ ] Height dm→m and weight hg→kg conversions
-- [ ] Hidden-ability flagging
-- [ ] **Grass → shiny business rule**: `isGrassType` + `shinySpriteUrl` (null when not grass) — AC-3.4
-- **Done when:** service unit tests pass for grass / grass+secondary / non-grass, unit conversions, and the three list-source branches, with the upstream client mocked.
+- [x] Implement `server/utils/pokeapi.ts` client (list, detail, and `type/{name}` members fetch) with typed upstream shapes — outbound names/types encoded (SSRF guard)
+- [x] Add caching (Nitro `defineCachedFunction`) with a long TTL (24h; Pokémon data is effectively immutable)
+- [x] Implement `pokemon.service`: map upstream → `PokemonListItem` / `PokemonDetail`
+- [x] List source selection in the service: default page vs. name lookup (`search`) vs. type members (`type`); search precedence over type
+- [x] Height dm→m and weight hg→kg conversions
+- [x] Hidden-ability flagging
+- [x] **Grass → shiny business rule**: `isGrassType` + `shinySpriteUrl` (null when not grass) — AC-3.4
+- **Done when:** service unit tests pass for grass / grass+secondary / non-grass, unit conversions, and the three list-source branches, with the upstream client mocked. ✅ 9 service tests pass (15 total); typecheck/lint/format green.
 
 ## Phase 3 — Pokémon API endpoints
 *Depends on: 2. Spec: [04-api-contract](./04-api-contract.md).*
