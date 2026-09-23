@@ -1,0 +1,36 @@
+# Dependencies
+node_modules
+
+# Nuxt / Nitro build output
+.nuxt
+.output
+.nitro
+.cache
+dist
+
+# Environment (keep .env.example)
+.env
+.env.*
+!.env.example
+
+# Database (local SQLite)
+*.sqlite
+*.sqlite3
+*.db
+prisma/*.db
+prisma/*.db-journal
+
+# Testing
+coverage
+playwright-report
+test-results
+.playwright
+
+# Logs
+*.log
+logs
+
+# Editor / OS
+.idea
+.vscode
+.DS_Store
