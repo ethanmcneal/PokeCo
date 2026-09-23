@@ -28,12 +28,12 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 0 — Project scaffold & tooling
 *Depends on: nothing. Goal: an empty app that runs, type-checks, and lints.*
 
-- [ ] Initialize Nuxt app with TypeScript (strict) and pnpm
-- [ ] Add ESLint + Prettier with a single agreed config; `lint` and `typecheck` scripts
-- [ ] Add Vitest and Playwright with `test` / `test:e2e` scripts (no real tests yet)
-- [ ] Set up runtime config / `.env` handling (PokéAPI base URL, session secret, `DATABASE_URL`); commit `.env.example`, gitignore `.env`
-- [ ] Establish shared types location (e.g. `shared/types`) importable by server and client
-- **Done when:** `pnpm dev`, `pnpm typecheck`, and `pnpm lint` all succeed on a clean checkout.
+- [x] Initialize Nuxt app with TypeScript (strict) and pnpm — Nuxt 4.5.2, Node 22 pinned via `.nvmrc`, pnpm 12
+- [x] Add ESLint + Prettier with a single agreed config; `lint` and `typecheck` scripts — `@nuxt/eslint` flat config (stylistic off), Prettier owns formatting
+- [x] Add Vitest and Playwright with `test` / `test:e2e` scripts (no real tests yet) — Vitest + `@nuxt/test-utils` (sanity test), Playwright configured across Chromium/Firefox/WebKit (smoke spec)
+- [x] Set up runtime config / `.env` handling (PokéAPI base URL, session secret, `DATABASE_URL`); commit `.env.example`, gitignore `.env` — `runtimeConfig.pokeApiBaseUrl`; DB/session vars documented as later-phase in `.env.example`
+- [x] Establish shared types location (e.g. `shared/types`) importable by server and client — `shared/types/index.ts` pre-populated with the API-contract DTOs
+- **Done when:** `pnpm dev`, `pnpm typecheck`, and `pnpm lint` all succeed on a clean checkout. ✅ typecheck/lint/format/test/build all green; built server returns 200 rendering the app.
 
 ## Phase 1 — Data layer
 *Depends on: 0. Spec: [03-data-model](./03-data-model.md).*
