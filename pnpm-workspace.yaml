@@ -2,9 +2,13 @@
 # allowBuilds: explicit allowlist of packages permitted to run install/build
 # scripts (pnpm blocks all others by default) — a deliberate supply-chain
 # control. esbuild backs the Vite build; unrs-resolver backs ESLint's import
-# resolution. See specs/07-security.md.
+# resolution; prisma/@prisma/engines set up the query engine binaries.
+# See specs/07-security.md.
 allowBuilds:
+  '@prisma/client': true
+  '@prisma/engines': true
   esbuild: true
+  prisma: true
   unrs-resolver: true
 # Excluded from the minimum-release-age supply-chain policy active in this env.
 minimumReleaseAgeExclude:

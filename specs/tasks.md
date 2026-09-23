@@ -38,13 +38,13 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 1 — Data layer
 *Depends on: 0. Spec: [03-data-model](./03-data-model.md).*
 
-- [ ] Add Prisma; configure SQLite datasource
-- [ ] Model `User` and `CaughtPokemon` per the schema (unique `(userId, pokemonId)`, cascade delete, `userId` index)
-- [ ] Create initial migration; add `db:migrate` script
-- [ ] Add Prisma client singleton (`server/db/client.ts`)
-- [ ] Implement `user.repository` and `collection.repository` (all queries scoped by `userId`)
-- [ ] Optional: `db:seed` script creating a demo user
-- **Done when:** migration applies cleanly and repositories are exercised by a quick unit test against a throwaway DB.
+- [x] Add Prisma; configure SQLite datasource — Prisma 6.19.3 (pinned to stable 6.x; 7.x/8.x are too new/RC)
+- [x] Model `User` and `CaughtPokemon` per the schema (unique `(userId, pokemonId)`, cascade delete, `userId` index)
+- [x] Create initial migration; add `db:migrate` script — `20260923195837_init` applied; `db:migrate`/`db:generate`/`db:migrate:deploy`/`db:studio` scripts added
+- [x] Add Prisma client singleton (`server/db/client.ts`)
+- [x] Implement `user.repository` and `collection.repository` (all queries scoped by `userId`)
+- [ ] Optional: `db:seed` script creating a demo user — **deferred to Phase 4**: seeding a login-able user needs the same password hashing the app uses (`nuxt-auth-utils`), which lands with auth
+- **Done when:** migration applies cleanly and repositories are exercised by a quick unit test against a throwaway DB. ✅ 5 repository tests (create/find, catch idempotency, user-scoping, idempotent release, cascade delete) pass against a temp SQLite DB; typecheck/lint/format green.
 
 ## Phase 2 — PokéAPI integration & caching
 *Depends on: 0. Spec: [02-architecture](./02-architecture.md) (caching), [04-api-contract](./04-api-contract.md) (DTOs).*

@@ -1,0 +1,40 @@
+// Prisma schema for PokéCo. Models mirror specs/03-data-model.md: we persist
+// only what we own (users and their caught Pokémon); Pokémon reference data
+// stays in PokéAPI and is cached at the API layer, not duplicated here.
+
+generator client {
+  provider = "prisma-client-js"
+  // Default output: with pnpm's nested store, letting Prisma place the client
+  // adjacent to @prisma/client is what keeps `import ... from '@prisma/client'`
+  // resolving correctly.
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String          @id @default(cuid())
+  email        String          @unique
+  passwordHash String
+  createdAt    DateTime        @default(now())
+  caught       CaughtPokemon[]
+}
+
+// One row = one species caught by one user. The collection.
+model CaughtPokemon {
+  id          String   @id @default(cuid())
+  userId      String
+  pokemonId   Int
+  // Display snapshot so the collection renders without an upstream fetch per row.
+  pokemonName String
+  spriteUrl   String
+  caughtAt    DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // A user owns a given species at most once -> makes catching idempotent.
+  @@unique([userId, pokemonId])
+  @@index([userId])
+}
