@@ -24,7 +24,7 @@ const sampleDetail: PokemonDetail = {
   abilities: [{ name: 'overgrow', isHidden: false }],
   types: ['grass'],
   spriteUrl: 'default.png',
-  isGrassType: true,
+  hasShinyForm: true,
   shinySpriteUrl: 'shiny.png',
 }
 

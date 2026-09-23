@@ -55,7 +55,7 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 - [x] List source selection in the service: default page vs. name lookup (`search`) vs. type members (`type`); search precedence over type
 - [x] Height dm→m and weight hg→kg conversions
 - [x] Hidden-ability flagging
-- [x] **Grass → shiny business rule**: `isGrassType` + `shinySpriteUrl` (null when not grass) — AC-3.4
+- [x] **Shiny-form business rule** (data-driven `SHINY_TYPES`, currently Grass): `hasShinyForm` + `shinySpriteUrl` (null when the rule doesn't apply) — AC-3.4
 - **Done when:** service unit tests pass for grass / grass+secondary / non-grass, unit conversions, and the three list-source branches, with the upstream client mocked. ✅ 9 service tests pass (15 total); typecheck/lint/format green.
 
 ## Phase 3 — Pokémon API endpoints
@@ -112,7 +112,7 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
 - [ ] `/pokemon/[name]` renders name, height (m), abilities (hidden tagged), types — AC-3.1–3.3
-- [ ] `ShinyImage` shown only when `isGrassType`, clearly labelled — AC-3.4
+- [ ] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
 - [ ] `404` name renders the not-found state
 - **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent).
 

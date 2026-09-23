@@ -32,7 +32,7 @@ hand-rolled — see [Design system](#design-system).
 - **`TypeBadge`** — a colored type chip; also used to visually flag Grass.
 - **`CatchButton`** — shows "Catch" / "Caught ✓"; disabled + prompts login when logged out;
   optimistic toggle on click, with the catch confirmation micro-interaction (see the catch flow).
-- **`ShinyImage`** — renders the shiny sprite; only mounted when `isGrassType`.
+- **`ShinyImage`** — renders the shiny sprite; only mounted when `hasShinyForm` and `shinySpriteUrl` is present.
 - **`CollectionList`** / **`CollectionItem`** — collection rows with caught-at time + release.
 - **`AppHeader`** — nav + auth state (login/register vs. email + logout + link to collection).
 

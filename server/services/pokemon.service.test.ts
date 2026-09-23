@@ -57,7 +57,7 @@ describe('getPokemonDetail', () => {
   it('exposes the shiny form for a Grass type (AC-3.4)', async () => {
     asMock(fetchPokemonByName).mockResolvedValue(raw()) // pure grass
     const detail = await getPokemonDetail('bulbasaur')
-    expect(detail.isGrassType).toBe(true)
+    expect(detail.hasShinyForm).toBe(true)
     expect(detail.shinySpriteUrl).toBe('shiny.png')
   })
 
@@ -71,7 +71,7 @@ describe('getPokemonDetail', () => {
       }),
     )
     const detail = await getPokemonDetail('venusaur')
-    expect(detail.isGrassType).toBe(true)
+    expect(detail.hasShinyForm).toBe(true)
     expect(detail.shinySpriteUrl).toBe('shiny.png')
   })
 
@@ -80,7 +80,7 @@ describe('getPokemonDetail', () => {
       raw({ id: 4, name: 'charmander', types: [{ slot: 1, type: { name: 'fire', url: '' } }] }),
     )
     const detail = await getPokemonDetail('charmander')
-    expect(detail.isGrassType).toBe(false)
+    expect(detail.hasShinyForm).toBe(false)
     expect(detail.shinySpriteUrl).toBeNull()
   })
 })

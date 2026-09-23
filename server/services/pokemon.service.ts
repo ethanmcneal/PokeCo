@@ -5,7 +5,10 @@ import type { Ability, Page, PokemonDetail, PokemonListItem } from '../../shared
 import type { RawPokemon } from '../utils/pokeapi'
 import { fetchPokemonByName, fetchPokemonList, fetchTypeMembers } from '../utils/pokeapi'
 
-const GRASS_TYPE = 'grass'
+// The set of types whose shiny form we surface. The requirement is Grass-only
+// (AC-3.4); expressing it as a policy set keeps the rule data-driven and easy to
+// change (e.g. add 'poison') without touching the shaping logic below.
+const SHINY_TYPES: readonly string[] = ['grass']
 
 function toTypes(raw: RawPokemon): string[] {
   return raw.types.map((t) => t.type.name)
@@ -22,7 +25,7 @@ function toListItem(raw: RawPokemon): PokemonListItem {
 
 function toDetail(raw: RawPokemon): PokemonDetail {
   const types = toTypes(raw)
-  const isGrassType = types.includes(GRASS_TYPE)
+  const hasShinyForm = types.some((t) => SHINY_TYPES.includes(t))
   const abilities: Ability[] = raw.abilities.map((a) => ({
     name: a.ability.name,
     isHidden: a.is_hidden,
@@ -36,9 +39,9 @@ function toDetail(raw: RawPokemon): PokemonDetail {
     abilities,
     types,
     spriteUrl: raw.sprites.front_default,
-    isGrassType,
-    // The business rule (AC-3.4): shiny form is exposed only for Grass types.
-    shinySpriteUrl: isGrassType ? raw.sprites.front_shiny : null,
+    hasShinyForm,
+    // The business rule (AC-3.4): shiny form is surfaced only for SHINY_TYPES.
+    shinySpriteUrl: hasShinyForm ? raw.sprites.front_shiny : null,
   }
 }
 

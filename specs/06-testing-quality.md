@@ -15,9 +15,9 @@ exhaustive: cover the business rules and the critical path well, and don't chase
 Where the domain lives, so where testing pays off most.
 
 - **`pokemon.service`**
-  - **The Grass → shiny rule** (AC-3.4): Grass Pokémon → `isGrassType true` + non-null
-    `shinySpriteUrl`; non-Grass → `false` + `null`. This is the one explicit business rule in the
-    requirements, so it gets dedicated cases (grass-only, grass+secondary type, non-grass).
+  - **The shiny-form rule** (AC-3.4): a type in `SHINY_TYPES` (currently Grass) → `hasShinyForm true`
+    + non-null `shinySpriteUrl`; otherwise `false` + `null`. This is the one explicit business rule
+    in the requirements, so it gets dedicated cases (grass-only, grass+secondary type, non-grass).
   - Height decimetres → metres and weight hectograms → kg conversion.
   - Hidden-ability flagging; DTO shape (no upstream fields leak through).
   - Upstream client is mocked — these tests are pure and fast.
