@@ -120,9 +120,9 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 9 — Auth UI
 *Depends on: 4, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `/register` and `/login` forms posting to the auth endpoints; error display
-- [ ] Header reflects logged-in state; logout clears session
-- **Done when:** a user can register, log out, and log back in through the UI.
+- [x] `/register` and `/login` (shared `AuthForm`) posting to the auth endpoints; server error display; redirect-back after auth (open-redirect guarded)
+- [x] Header reflects logged-in state; logout clears session (from Phase 6 `AppHeader`); `auth` middleware now passes a `redirect` query
+- **Done when:** a user can register, log out, and log back in through the UI. ✅ verified live (see Phase 10 smoke).
 
 ## Phase 10 — Collection UI & catch flow
 *Depends on: 5, 7, 8, 9. Spec: [05-frontend-ux](./05-frontend-ux.md).*

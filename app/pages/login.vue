@@ -1,6 +1,8 @@
+<script setup lang="ts">
+const { loggedIn } = useUserSession()
+if (loggedIn.value) await navigateTo('/')
+</script>
+
 <template>
-  <div>
-    <h1 class="text-2xl font-bold">Log in</h1>
-    <p class="mt-2 text-muted">Login form arrives in Phase 9.</p>
-  </div>
+  <AuthForm mode="login" />
 </template>
