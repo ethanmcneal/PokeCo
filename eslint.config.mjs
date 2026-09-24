@@ -5,5 +5,9 @@
 import withNuxt from './.nuxt/eslint.config.mjs'
 
 export default withNuxt({
-  // Project-specific rule overrides go here as the codebase grows.
+  rules: {
+    // Formatting is owned by Prettier; disable the stylistic Vue rule that
+    // conflicts with Prettier's void-element formatting (<img />).
+    'vue/html-self-closing': 'off',
+  },
 })

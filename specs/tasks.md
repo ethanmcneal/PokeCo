@@ -102,12 +102,12 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 7 — Browse & search UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `PokemonCard`, `PokemonGrid` with all four states: loading (skeletons), empty, error + retry, success
-- [ ] `/` fetches `GET /api/pokemon` via `useFetch`, query bound to URL — AC-1.1, AC-1.2
-- [ ] `Pagination` bound to `limit`/`offset` in the URL
-- [ ] `SearchBar` (debounced) driving the `search` query; friendly no-match state — AC-2.1/2.2
-- [ ] `TypeFilter` driving the `type` query; composes with search + pagination; resets `offset` on change
-- **Done when:** browsing, paging (with back/forward), searching, and type filtering all work against the live API, with loading/empty/error states visible.
+- [x] `PokemonCard`, `PokemonGrid` with all four states: loading (skeletons), empty, error + retry, success
+- [x] `/` fetches `GET /api/pokemon` via `useFetch`, query bound to URL — AC-1.1, AC-1.2
+- [x] `Pagination` (`UPagination`) bound to the URL `page` (→ `limit`/`offset`)
+- [x] `SearchBar` (debounced 300ms) driving the `q` query; friendly no-match state — AC-2.1/2.2
+- [x] `TypeFilter` driving the `type` query; composes with search + pagination; resets page on change
+- **Done when:** browsing, paging (with back/forward), searching, and type filtering all work against the live API, with loading/empty/error states visible. ✅ verified live via SSR: grid renders, `?q=pikachu` finds it, `?q=notarealmon` shows empty state, `?type=grass` filters (no charmander), `?page=2` pages. Note: shared imports in `app/` use the `#shared` alias (relative paths break the client bundle).
 
 ## Phase 8 — Detail UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*

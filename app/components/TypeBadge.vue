@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { typeColor } from '../utils/pokemonTypes'
-
+// typeColor is auto-imported from app/utils/pokemonTypes.
 const props = defineProps<{ type: string }>()
 const color = computed(() => typeColor(props.type))
 </script>

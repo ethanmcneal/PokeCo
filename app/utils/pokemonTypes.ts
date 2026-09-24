@@ -1,4 +1,4 @@
-import type { PokemonType } from '../../shared/pokemon'
+import type { PokemonType } from '#shared/pokemon'
 
 // Canonical Pokémon type colors. Kept as a data map so TypeBadge (and TypeFilter)
 // render from one source; badges pair color WITH a text label, never color alone
