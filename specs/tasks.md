@@ -112,10 +112,10 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 8 — Detail UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `/pokemon/[name]` renders name, height (m), abilities (hidden tagged), types — AC-3.1–3.3
-- [ ] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
-- [ ] `404` name renders the not-found state
-- **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent).
+- [x] `/pokemon/[name]` renders name, height (m), weight (kg), abilities (hidden tagged), types — AC-3.1–3.3
+- [x] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
+- [x] `404` name renders the not-found state (other errors + loading skeleton handled too)
+- **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent). ✅ verified live (see Phase 10 smoke).
 
 ## Phase 9 — Auth UI
 *Depends on: 4, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
