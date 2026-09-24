@@ -1,9 +1,39 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+
+// Security headers applied to every response (specs/07-security.md). CSP is
+// production-only so it doesn't interfere with Vite HMR in development; it allows
+// 'unsafe-inline' for the SSR hydration payload and Nuxt UI's injected styles —
+// a nonce-based policy would be the hardening step.
+const securityHeaders: Record<string, string> = {
+  'X-Content-Type-Options': 'nosniff',
+  'Referrer-Policy': 'strict-origin-when-cross-origin',
+  'X-Frame-Options': 'DENY',
+  ...(process.env.NODE_ENV === 'production'
+    ? {
+        'Content-Security-Policy': [
+          "default-src 'self'",
+          "img-src 'self' data: https://raw.githubusercontent.com",
+          "style-src 'self' 'unsafe-inline'",
+          "script-src 'self' 'unsafe-inline'",
+          "connect-src 'self'",
+          "base-uri 'self'",
+          "frame-ancestors 'none'",
+        ].join('; '),
+      }
+    : {}),
+}
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ['@nuxt/eslint', 'nuxt-auth-utils'],
+  css: ['~/assets/css/main.css'],
+
+  routeRules: {
+    '/**': { headers: securityHeaders },
+  },
+
+  modules: ['@nuxt/eslint', 'nuxt-auth-utils', '@nuxt/ui'],
 
   // Strict TypeScript across the app (see specs/06-testing-quality.md).
   typescript: {

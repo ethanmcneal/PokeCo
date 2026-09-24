@@ -91,13 +91,13 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 6 — Frontend foundation
 *Depends on: 0. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] Install & configure **Nuxt UI**; establish the app shell using its primitives
-- [ ] Design tokens (spacing, type scale, Pokémon type-color map); theme Nuxt UI with them
-- [ ] App layout + `AppHeader` (auth-aware nav via `useUserSession`)
-- [ ] Routing skeleton for all pages; protected-route middleware → `/login`
-- [ ] Reusable `TypeBadge` (label + color, from the type-color map)
-- [ ] Security headers / CSP via Nitro route rules — [07](./07-security.md)
-- **Done when:** all routes resolve, the header reflects logged-out state, the protected-route redirect works, components render through the themed Nuxt UI base, and security headers are present on responses.
+- [x] Install & configure **Nuxt UI** (4.11.2); app shell via `<UApp>` + layout + `UContainer`/`UButton`
+- [x] Design tokens (Pokémon type-color map in `app/utils/pokemonTypes.ts`); Nuxt UI themed via `app.config.ts` (red primary / slate neutral)
+- [x] App layout + `AppHeader` (auth-aware nav via `useUserSession`)
+- [x] Routing skeleton for all pages; protected-route middleware → `/login`
+- [x] Reusable `TypeBadge` (label + color, from the type-color map)
+- [x] Security headers / CSP via Nitro `routeRules` (nosniff, Referrer-Policy, X-Frame-Options always; CSP production-only) — [07](./07-security.md)
+- **Done when:** all routes resolve, the header reflects logged-out state, the protected-route redirect works, components render through the themed Nuxt UI base, and security headers are present on responses. ✅ verified live: `/` 200 with logged-out nav, `/collection` → 302 `/login`, all four security headers present (CSP in the prod build).
 
 ## Phase 7 — Browse & search UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*

@@ -26,6 +26,7 @@
     "test:e2e": "playwright test"
   },
   "dependencies": {
+    "@nuxt/ui": "^4.11.2",
     "@prisma/client": "^6.19.3",
     "nuxt": "^4.5.2",
     "nuxt-auth-utils": "0.5.30",
