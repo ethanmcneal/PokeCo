@@ -82,32 +82,32 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 5 — Collection API
 *Depends on: 1, 2, 4. Spec: [04-api-contract](./04-api-contract.md).*
 
-- [ ] `POST /api/collection` — resolve display fields via cached PokéAPI, upsert `(userId, pokemonId)` (idempotent), `caughtAt` server-set — AC-5.1–5.3
-- [ ] `GET /api/collection` — session user's entries, newest first — AC-6.1–6.3
-- [ ] `DELETE /api/collection/:pokemonId` — idempotent release — AC-7.1
-- [ ] Rate limit `catch` (protects us and the upstream); ensure `pokemonId` is validated/encoded into the upstream request — [07](./07-security.md)
-- **Done when:** integration tests cover catch idempotency, user-scoping (never returns another user's rows), and release.
+- [x] `POST /api/collection` — resolve display fields via cached PokéAPI, upsert `(userId, pokemonId)` (idempotent), `caughtAt` server-set; `404` on unknown id — AC-5.1–5.3
+- [x] `GET /api/collection` — session user's entries, newest first — AC-6.1–6.3
+- [x] `DELETE /api/collection/:pokemonId` — idempotent release — AC-7.1
+- [x] Rate limit `catch` (per user; protects us and the upstream); `pokemonId` validated + encoded into the upstream request — [07](./07-security.md)
+- **Done when:** integration tests cover catch idempotency, user-scoping (never returns another user's rows), and release. ✅ 13 tests (service mapping + endpoints incl. 401 guard on all three, 400, 404) — 51 total; also verified live: 201 catch + idempotent, 404 bad id, newest-first list with resolved fields, 204 release, 401 unauthenticated.
 
 ## Phase 6 — Frontend foundation
 *Depends on: 0. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] Install & configure **Nuxt UI**; establish the app shell using its primitives
-- [ ] Design tokens (spacing, type scale, Pokémon type-color map); theme Nuxt UI with them
-- [ ] App layout + `AppHeader` (auth-aware nav via `useUserSession`)
-- [ ] Routing skeleton for all pages; protected-route middleware → `/login`
-- [ ] Reusable `TypeBadge` (label + color, from the type-color map)
-- [ ] Security headers / CSP via Nitro route rules — [07](./07-security.md)
-- **Done when:** all routes resolve, the header reflects logged-out state, the protected-route redirect works, components render through the themed Nuxt UI base, and security headers are present on responses.
+- [x] Install & configure **Nuxt UI** (4.11.2); app shell via `<UApp>` + layout + `UContainer`/`UButton`
+- [x] Design tokens (Pokémon type-color map in `app/utils/pokemonTypes.ts`); Nuxt UI themed via `app.config.ts` (red primary / slate neutral)
+- [x] App layout + `AppHeader` (auth-aware nav via `useUserSession`)
+- [x] Routing skeleton for all pages; protected-route middleware → `/login`
+- [x] Reusable `TypeBadge` (label + color, from the type-color map)
+- [x] Security headers / CSP via Nitro `routeRules` (nosniff, Referrer-Policy, X-Frame-Options always; CSP production-only) — [07](./07-security.md)
+- **Done when:** all routes resolve, the header reflects logged-out state, the protected-route redirect works, components render through the themed Nuxt UI base, and security headers are present on responses. ✅ verified live: `/` 200 with logged-out nav, `/collection` → 302 `/login`, all four security headers present (CSP in the prod build).
 
 ## Phase 7 — Browse & search UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `PokemonCard`, `PokemonGrid` with all four states: loading (skeletons), empty, error + retry, success
-- [ ] `/` fetches `GET /api/pokemon` via `useFetch`, query bound to URL — AC-1.1, AC-1.2
-- [ ] `Pagination` bound to `limit`/`offset` in the URL
-- [ ] `SearchBar` (debounced) driving the `search` query; friendly no-match state — AC-2.1/2.2
-- [ ] `TypeFilter` driving the `type` query; composes with search + pagination; resets `offset` on change
-- **Done when:** browsing, paging (with back/forward), searching, and type filtering all work against the live API, with loading/empty/error states visible.
+- [x] `PokemonCard`, `PokemonGrid` with all four states: loading (skeletons), empty, error + retry, success
+- [x] `/` fetches `GET /api/pokemon` via `useFetch`, query bound to URL — AC-1.1, AC-1.2
+- [x] `Pagination` (`UPagination`) bound to the URL `page` (→ `limit`/`offset`)
+- [x] `SearchBar` (debounced 300ms) driving the `q` query; friendly no-match state — AC-2.1/2.2
+- [x] `TypeFilter` driving the `type` query; composes with search + pagination; resets page on change
+- **Done when:** browsing, paging (with back/forward), searching, and type filtering all work against the live API, with loading/empty/error states visible. ✅ verified live via SSR: grid renders, `?q=pikachu` finds it, `?q=notarealmon` shows empty state, `?type=grass` filters (no charmander), `?page=2` pages. Note: shared imports in `app/` use the `#shared` alias (relative paths break the client bundle).
 
 ## Phase 8 — Detail UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*

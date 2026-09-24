@@ -10,6 +10,7 @@ allowBuilds:
   esbuild: true
   prisma: true
   unrs-resolver: true
+  vue-demi: true
 # Excluded from the minimum-release-age supply-chain policy active in this env.
 minimumReleaseAgeExclude:
   - prettier@3.9.9

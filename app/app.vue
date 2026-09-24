@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <!-- UApp provides Nuxt UI's overlay/toast/tooltip context app-wide. -->
+  <UApp>
     <NuxtRouteAnnouncer />
-    <main>
-      <h1>PokéCo</h1>
-      <p>Scaffold ready — features arrive per the plan in specs/tasks.md.</p>
-    </main>
-  </div>
+    <NuxtLayout>
+      <NuxtPage />
+    </NuxtLayout>
+  </UApp>
 </template>
