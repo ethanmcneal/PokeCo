@@ -82,11 +82,11 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 5 — Collection API
 *Depends on: 1, 2, 4. Spec: [04-api-contract](./04-api-contract.md).*
 
-- [ ] `POST /api/collection` — resolve display fields via cached PokéAPI, upsert `(userId, pokemonId)` (idempotent), `caughtAt` server-set — AC-5.1–5.3
-- [ ] `GET /api/collection` — session user's entries, newest first — AC-6.1–6.3
-- [ ] `DELETE /api/collection/:pokemonId` — idempotent release — AC-7.1
-- [ ] Rate limit `catch` (protects us and the upstream); ensure `pokemonId` is validated/encoded into the upstream request — [07](./07-security.md)
-- **Done when:** integration tests cover catch idempotency, user-scoping (never returns another user's rows), and release.
+- [x] `POST /api/collection` — resolve display fields via cached PokéAPI, upsert `(userId, pokemonId)` (idempotent), `caughtAt` server-set; `404` on unknown id — AC-5.1–5.3
+- [x] `GET /api/collection` — session user's entries, newest first — AC-6.1–6.3
+- [x] `DELETE /api/collection/:pokemonId` — idempotent release — AC-7.1
+- [x] Rate limit `catch` (per user; protects us and the upstream); `pokemonId` validated + encoded into the upstream request — [07](./07-security.md)
+- **Done when:** integration tests cover catch idempotency, user-scoping (never returns another user's rows), and release. ✅ 13 tests (service mapping + endpoints incl. 401 guard on all three, 400, 404) — 51 total; also verified live: 201 catch + idempotent, 404 bad id, newest-first list with resolved fields, 204 release, 401 unauthenticated.
 
 ## Phase 6 — Frontend foundation
 *Depends on: 0. Spec: [05-frontend-ux](./05-frontend-ux.md).*

@@ -22,5 +22,13 @@ export const credentialsSchema = z.object({
   password: z.string().min(8, 'Password must be at least 8 characters').max(200),
 })
 
+// Catching takes the PokéAPI numeric id; the display fields are resolved
+// server-side, never trusted from the client.
+export const catchBodySchema = z.object({
+  pokemonId: z.coerce.number().int().positive(),
+})
+
+export const pokemonIdParamSchema = z.coerce.number().int().positive()
+
 export type PokemonListQuery = z.infer<typeof pokemonListQuerySchema>
 export type Credentials = z.infer<typeof credentialsSchema>
