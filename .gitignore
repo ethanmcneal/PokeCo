@@ -40,3 +40,6 @@ logs
 
 # Local tooling settings (machine-specific)
 .claude/settings.local.json
+
+# Personal interview prep notes (not part of the deliverable)
+interview-prep.md

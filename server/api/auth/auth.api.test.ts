@@ -94,6 +94,21 @@ describe('POST /api/auth/login', () => {
     expect(noUser.statusCode).toBe(401)
     expect(wrongPw.message).toBe(noUser.message)
   })
+
+  it('verifies against a decoy hash for an unknown user (no timing side-channel)', async () => {
+    const globals = globalThis as unknown as {
+      verifyPassword: (hash: string, password: string) => Promise<boolean>
+    }
+    const verifySpy = vi.spyOn(globals, 'verifyPassword')
+
+    vi.mocked(findUserByEmail).mockResolvedValue(null)
+    await login({ body: { email: 'ghost@x.com', password: 'secret12' } }).catch(() => {})
+
+    // The slow password verification still runs even though there is no account,
+    // so response time is the same as for a real email with a wrong password.
+    expect(verifySpy).toHaveBeenCalledOnce()
+    verifySpy.mockRestore()
+  })
 })
 
 describe('POST /api/auth/logout', () => {
