@@ -11,7 +11,7 @@ cookie set by `nuxt-auth-utils`; protected routes require it.
   { "statusCode": 400, "statusMessage": "Bad Request", "message": "pokemonId must be a positive integer" }
   ```
 - **Auth failures:** `401` when a session is required and absent.
-- **Units:** height is returned in **metres** (converted from PokéAPI decimetres). Weight in **kg**.
+- **Units:** height is returned in **meters** (converted from PokéAPI decimeters). Weight in **kg**.
 - **IDs:** `pokemonId` is the PokéAPI numeric id.
 
 ## Shared DTOs
@@ -34,13 +34,13 @@ interface Ability {
 interface PokemonDetail {
   id: number
   name: string
-  heightM: number            // metres (converted from decimetres)
+  heightM: number            // meters (converted from decimeters)
   weightKg: number           // kg (converted from hectograms)
   abilities: Ability[]
   types: string[]
   spriteUrl: string | null
   genus: string | null       // species genus, e.g. "Seed Pokémon" (from /pokemon-species)
-  description: string | null // Pokédex flavour text, cleaned; null if the species lookup misses
+  description: string | null // Pokédex flavor text, cleaned; null if the species lookup misses
   hasShinyForm: boolean      // result of the shiny-form rule (server SHINY_TYPES; currently Grass)
   shinySpriteUrl: string | null   // populated when hasShinyForm and upstream has one, else null — AC-3.4
 }

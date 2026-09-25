@@ -33,7 +33,7 @@ export interface RawSprites {
 export interface RawPokemon {
   id: number
   name: string
-  height: number // decimetres
+  height: number // decimeters
   weight: number // hectograms
   abilities: RawAbilityEntry[]
   types: RawTypeEntry[]
@@ -45,7 +45,7 @@ export interface RawTypeResponse {
   pokemon: { slot: number; pokemon: RawNamedResource }[]
 }
 
-// A "flavour text" entry is a Pokédex description; the same species has many,
+// A "flavor text" entry is a Pokédex description; the same species has many,
 // one per language and game version. We surface the first English one.
 export interface RawFlavorTextEntry {
   flavor_text: string

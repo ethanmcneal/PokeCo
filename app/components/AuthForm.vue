@@ -49,7 +49,10 @@ const redirectQuery = computed(() =>
       </h1>
     </template>
 
-    <form class="space-y-4" @submit.prevent="onSubmit">
+    <!-- `method="post"` matters only before hydration: without it a stray native
+         submit would GET the current URL, putting the password in the query string
+         (and browser history). The handler below owns the real submit. -->
+    <form class="space-y-4" method="post" @submit.prevent="onSubmit">
       <UFormField label="Email" name="email">
         <UInput v-model="state.email" type="email" autocomplete="email" required class="w-full" />
       </UFormField>

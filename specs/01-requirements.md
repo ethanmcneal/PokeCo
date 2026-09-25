@@ -22,14 +22,14 @@ The brief is deliberately open. Our reading of where the real work is:
   and enriching each with a sprite/type would otherwise mean many upstream calls.
 - **The collection is the domain we own.** "Catch," "per-user," "independent," and "caught-at
   timestamp" together require user identity + persistence + our own data model. This is where our
-  own design work concentrates: API design, auth, and data modelling.
+  own design work concentrates: API design, auth, and data modeling.
 - **The Grass → shiny rule is a business rule**, not a UI detail. It lives in the server's service
   layer and is expressed once, so it can be tested and explained in isolation.
 - **We scope the shiny form to the detail view**, where the brief lists it alongside Name / Height /
   Abilities as information you "explore about a Pokémon." The detail page shows the canonical sprite
-  *and* a clearly labelled shiny form (additive, not a swap). Browse and collection deliberately keep
-  the **canonical** sprite everywhere: those are scanning surfaces where recognisability matters, and
-  recolouring only Grass types would make the grid inconsistent and harder to read. Accordingly, only
+  *and* a clearly labeled shiny form (additive, not a swap). Browse and collection deliberately keep
+  the **canonical** sprite everywhere: those are scanning surfaces where recognizability matters, and
+  recoloring only Grass types would make the grid inconsistent and harder to read. Accordingly, only
   the detail DTO carries `hasShinyForm` / `shinySpriteUrl`; the list DTO stays canonical-only.
 
 ### In scope
@@ -64,7 +64,7 @@ features. Recorded here so the scope decision is explicit rather than incidental
 
 ## User stories & acceptance criteria
 
-Written so each maps directly to a testable behaviour.
+Written so each maps directly to a testable behavior.
 
 ### US-1 — Browse
 > As a visitor, I can browse a list of Pokémon so I can discover them.
@@ -84,7 +84,7 @@ Written so each maps directly to a testable behaviour.
 > As a visitor, I can view detailed information about a Pokémon.
 
 - **AC-3.1** The detail page shows **name, height, and abilities** at minimum.
-- **AC-3.2** Height is presented in human units (metres), not raw decimetres.
+- **AC-3.2** Height is presented in human units (meters), not raw decimeters.
 - **AC-3.3** Abilities are listed by name; hidden abilities are indicated.
 - **AC-3.4** **If the Pokémon is a Grass type, its shiny form image is shown.** Non-Grass Pokémon
   do not show a shiny image.

@@ -18,14 +18,14 @@ Where the domain lives, so where testing pays off most.
   - **The shiny-form rule** (AC-3.4): a type in `SHINY_TYPES` (currently Grass) → `hasShinyForm true`
     + non-null `shinySpriteUrl`; otherwise `false` + `null`. This is the one explicit business rule
     in the requirements, so it gets dedicated cases (grass-only, grass+secondary type, non-grass).
-  - Height decimetres → metres and weight hectograms → kg conversion.
+  - Height decimeters → meters and weight hectograms → kg conversion.
   - Hidden-ability flagging; DTO shape (no upstream fields leak through).
   - Upstream client is mocked — these tests are pure and fast.
 - **`collection.service`**
   - Catch is idempotent on `(userId, pokemonId)` (AC-5.3).
   - Release is idempotent.
 - **`repositories`** — run against a throwaway SQLite test DB: user-scoping (a query never returns
-  another user's rows — AC-6.3), unique constraint behaviour, cascade on user delete.
+  another user's rows — AC-6.3), unique constraint behavior, cascade on user delete.
 
 ### Integration — the HTTP boundary
 Exercise Nitro handlers with a test client:
@@ -52,7 +52,7 @@ sandboxes). So the critical path is verified on multiple engines without a flaky
 ## What we deliberately don't test
 
 - PokéAPI itself (it's a stubbed dependency).
-- Exhaustive component snapshot tests — brittle, low value here. We test behaviour (the store's
+- Exhaustive component snapshot tests — brittle, low value here. We test behavior (the store's
   optimistic catch/rollback) over markup.
 - Every field permutation — representative cases, not combinatorial.
 

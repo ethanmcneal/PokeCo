@@ -61,52 +61,36 @@ suite stays reliable on any machine.
 
 ## Why spec-driven development
 
-Spec-driven development is a way of approaching ai-driven development that I've come to love recently.
-It's a very efficient way to make use of the powerful AI tools available but still being in control.
-It's a great way of breaking a project into pieces, setting guardrails for your LLM to follow, and
-being able to validate the output produced by the AI at meaningful checkpoints. (usually the end of a task
-or phase as seen in tasks.md)
+The real difficulty here wasn't any single feature — it was the decisions around
+them: where domain logic lives, how auth and persistence are modeled, what
+"if Grass, show shiny" should actually mean. I wrote those down before writing
+code, so the expensive thinking happened once, in prose, where it's cheap to change.
 
-The specs are written before any code because the brief's real difficulty isn't any single feature —
-it's the decisions around them. (where the domain logic lives, how auth and persistence are modeled,
-what "if Grass, show shiny" really means).
-Writing those down first meant:
+It also makes AI assistance tractable. A spec gives the model a contract to build
+against and gives me a fixed point to check against — when output drifted, the
+spec was the source of truth, not the code. In practice:
 
-- the hard thinking happened once, in prose, where it's cheap to change;
-- each phase had an explicit "done when", so scope didn't drift;
-- and every non-obvious call is reviewable on its own, not reverse-engineered
-  from a diff.
-
-I came to the conclusion from the job description that developing in this way comes close to
-how you expect AI assistance to be used in this role. Which aligns closely with
-my personal thoughts on the AI space as well.
-
-## Directing (and validating) AI tooling
-
-I used AI assistance throughout, but the leverage came from **direction and
-verification**, not delegation:
-
-- **Decomposition** — I broke the work into phases with acceptance criteria
-  (`specs/tasks.md`) and drove them one at a time, rather than asking for "an app".
-- **Specs as the contract** — the AI implemented against the specs I wrote; when
-  output drifted from them, the spec was the source of truth, not the code.
-- **Validation over trust** — every phase was gated on `typecheck`, `lint`, the
-  test suite, a production build, and manual verification in the browser. A few
-  examples of catches that mattered: pinning Prisma to a stable major instead of
-  the `latest` release-candidate; moving `#auth-utils` type augmentation so Nuxt's
-  split TS projects picked it up; and switching app→shared imports to the `#shared`
-  alias after relative paths broke the client bundle.
-- **Interpreting intent** — see below.
+- **Decomposition** — phased with explicit acceptance criteria (`specs/tasks.md`),
+  driven one phase at a time rather than asking for "an app".
+- **A contract, not a prompt** — each phase has a "done when", so scope didn't drift.
+- **Validation over trust** — every phase gated on `typecheck`, `lint`, the test
+  suite, a production build, and manual verification in the browser. Catches that
+  mattered: pinning Prisma to a stable major instead of the `latest` release
+  candidate; moving `#auth-utils` type augmentation so Nuxt's split TS projects
+  picked it up; switching app→shared imports to the `#shared` alias after relative
+  paths broke the client bundle.
+- **Reviewable decisions** — every non-obvious call is recorded on its own
+  (`specs/adr/`), not reverse-engineered from a diff.
 
 ## Requirements → intended outcome (not the literal request)
 
-A few places where the literal brief and the _useful_ behaviour diverged, and I
+A few places where the literal brief and the _useful_ behavior diverged, and I
 chose the outcome:
 
 - **"If the Pokémon is a Grass type, show its shiny form."** I scoped this to the
   detail view (where the brief lists it alongside height/abilities) and show it
   _additively_ next to the canonical sprite. Browse and collection stay canonical
-  — recolouring only Grass entries in a scanning grid hurts recognisability. The
+  — recoloring only Grass entries in a scanning grid hurts recognizability. The
   rule is a data-driven policy set (`SHINY_TYPES`), not a hard-coded `=== 'grass'`,
   so it's testable and trivially extendable.
 - **Search.** "Search by name" as an exact match is technically correct and nearly
@@ -114,7 +98,7 @@ chose the outcome:
   excluded PokéAPI's alternate battle forms so results stay to standard dex entries.
 - **Catch semantics.** "Catch into a collection" implied identity, per-user
   isolation, and a timestamp — so the collection (not the read-only PokéAPI proxy)
-  is where the real domain modelling went.
+  is where the real domain modeling went.
 
 ## Architecture at a glance
 

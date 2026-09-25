@@ -28,7 +28,7 @@ test('register → browse → open a Pokémon → catch → see it in the collec
   await expect(page.getByRole('heading', { level: 1, name })).toBeVisible()
 
   // Catch it — the button flips to the caught state optimistically. The button's
-  // accessible name is "Catch <name>" / "Caught <name>" (labelled per Pokémon).
+  // accessible name is "Catch <name>" / "Caught <name>" (labeled per Pokémon).
   // Wait for the POST to persist before navigating, so the reload below reads it
   // back from the server rather than racing the optimistic update.
   const persisted = page.waitForResponse(

@@ -19,7 +19,7 @@ export interface Ability {
 export interface PokemonDetail {
   id: number
   name: string
-  /** Height in metres (converted from PokéAPI decimetres). */
+  /** Height in meters (converted from PokéAPI decimeters). */
   heightM: number
   /** Weight in kilograms (converted from PokéAPI hectograms). */
   weightKg: number
@@ -28,7 +28,7 @@ export interface PokemonDetail {
   spriteUrl: string | null
   /** The species genus, e.g. "Seed Pokémon". Null when the upstream omits it. */
   genus: string | null
-  /** Pokédex flavour text (a short description), cleaned of control characters. Null when absent. */
+  /** Pokédex flavor text (a short description), cleaned of control characters. Null when absent. */
   description: string | null
   /** True when this Pokémon's type triggers the shiny-form rule (server SHINY_TYPES). */
   hasShinyForm: boolean

@@ -35,8 +35,8 @@ function firstEnglish<T extends { language: RawNamedResource }>(entries: T[]): T
   return entries.find((e) => e.language.name === 'en')
 }
 
-// PokéAPI flavour text is padded with control characters (newlines, form feeds)
-// and soft hyphens from its original fixed-width game text. Normalise to a plain
+// PokéAPI flavor text is padded with control characters (newlines, form feeds)
+// and soft hyphens from its original fixed-width game text. Normalize to a plain
 // single-spaced sentence for the UI.
 function cleanFlavorText(text: string): string {
   return text
@@ -71,7 +71,7 @@ function toDetail(raw: RawPokemon, species: RawPokemonSpecies | null): PokemonDe
   return {
     id: raw.id,
     name: raw.name,
-    heightM: raw.height / 10, // decimetres → metres
+    heightM: raw.height / 10, // decimeters → meters
     weightKg: raw.weight / 10, // hectograms → kilograms
     abilities,
     types,

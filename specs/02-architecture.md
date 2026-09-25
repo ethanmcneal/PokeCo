@@ -29,7 +29,7 @@ The choices below all serve one goal: **the system can be extended without rewor
 - **One source of truth per concept.** DTO types are defined once and shared front to back;
   business rules (e.g. Grass → shiny) and the PokéAPI/type-color mappings live in exactly one place,
   so a change happens in one file, not many.
-- **Reusable, documented primitives.** Cross-cutting behaviour (validation, error shaping, the auth
+- **Reusable, documented primitives.** Cross-cutting behavior (validation, error shaping, the auth
   guard, the cached upstream client) is factored into shared utilities rather than repeated per
   route.
 - **Secure and correct by construction.** Inputs are validated at the boundary and persistence is
@@ -94,7 +94,7 @@ the API to its own service means moving `services/` + `repositories/` rather tha
 ### Detail + Grass rule — `GET /api/pokemon/:name`
 1. Handler validates the name.
 2. `pokemon.service` fetches the Pokémon (cached), maps to the detail DTO, converts height
-   decimetres → metres, flags hidden abilities.
+   decimeters → meters, flags hidden abilities.
 3. **Business rule:** if any `types[].type.name === "grass"`, the DTO includes
    `shinySpriteUrl`; otherwise that field is `null`. Expressed once here, unit-tested directly.
 4. Handler returns the DTO.

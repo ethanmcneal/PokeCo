@@ -4,6 +4,12 @@ import { defineConfig, devices } from '@playwright/test'
 // cross-browser matrix (Chromium/Firefox/WebKit) below satisfies the
 // "compliant with major browsers" goal (see specs/06-testing-quality.md).
 // Browser binaries are installed on demand with `pnpm exec playwright install`.
+// E2E runs on its own port so it never collides with (or silently reuses) a
+// `pnpm dev` server on 3000 — reusing that one would skip the env below and
+// trip the auth rate limiter mid-journey.
+const E2E_PORT = process.env.E2E_PORT ?? '3100'
+const E2E_BASE_URL = `http://localhost:${E2E_PORT}`
+
 export default defineConfig({
   testDir: './tests/e2e',
   fullyParallel: true,
@@ -13,7 +19,7 @@ export default defineConfig({
   // ~25 upstream calls on a cold cache), so allow more than the 5s default.
   expect: { timeout: 10_000 },
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: E2E_BASE_URL,
     trace: 'on-first-retry',
     navigationTimeout: 30_000,
   },
@@ -24,10 +30,11 @@ export default defineConfig({
   // Requires a migrated DB (`pnpm db:migrate`).
   webServer: {
     command: 'pnpm build && node .output/server/index.mjs',
-    url: 'http://localhost:3000',
+    url: E2E_BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 180_000,
     env: {
+      PORT: E2E_PORT,
       NUXT_SESSION_PASSWORD:
         process.env.NUXT_SESSION_PASSWORD ?? 'e2e-session-password-at-least-32-characters',
       DATABASE_URL: `file:${process.cwd()}/prisma/dev.db`,
