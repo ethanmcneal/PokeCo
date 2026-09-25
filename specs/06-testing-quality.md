@@ -44,8 +44,10 @@ One high-value journey proving the pieces integrate:
 
 Plus one guard check: visiting `/collection` while logged out redirects to `/login`.
 
-The E2E suite runs across **Chromium, Firefox, and WebKit** (Playwright projects), so the critical
-path is verified on all major browser engines rather than assumed.
+All three engines are configured as Playwright projects. The default `pnpm test:e2e` runs
+**Chromium and Firefox** (reliable on any machine); `pnpm test:e2e:all` adds **WebKit**, kept
+opt-in because its Playwright browser build fails to launch on some environments (older macOS,
+sandboxes). So the critical path is verified on multiple engines without a flaky default suite.
 
 ## What we deliberately don't test
 

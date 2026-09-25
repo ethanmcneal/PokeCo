@@ -1,13 +1,13 @@
 import type { PublicUser } from '../../../shared/types'
 import { createUser, findUserByEmail } from '../../repositories/user.repository'
 import { isUniqueConstraintError } from '../../utils/errors'
-import { rateLimit } from '../../utils/rate-limit'
+import { rateLimit, rateLimitBypassed } from '../../utils/rate-limit'
 import { credentialsSchema } from '../../utils/validation'
 
 // POST /api/auth/register (specs/04-api-contract.md, AC-4.1).
 export default defineEventHandler(async (event): Promise<PublicUser> => {
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'
-  if (!rateLimit(`register:${ip}`, 5, 60_000).allowed) {
+  if (!rateLimitBypassed() && !rateLimit(`register:${ip}`, 5, 60_000).allowed) {
     throw createError({
       statusCode: 429,
       statusMessage: 'Too Many Requests',

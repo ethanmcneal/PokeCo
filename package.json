@@ -23,7 +23,8 @@
     "format:check": "prettier --check .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test --project=chromium --project=firefox",
+    "test:e2e:all": "playwright test"
   },
   "dependencies": {
     "@nuxt/ui": "^4.11.2",

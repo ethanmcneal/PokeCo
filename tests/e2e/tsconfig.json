@@ -1,0 +1,16 @@
+{
+  // Scopes the Playwright specs to their own TS project so editors resolve
+  // @playwright/test's types (the `page` fixture etc.). Kept separate from the
+  // Nuxt app/server tsconfigs, which don't include the test files.
+  "compilerOptions": {
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "target": "ESNext",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "types": [],
+    "noEmit": true
+  },
+  "include": ["**/*.ts"]
+}

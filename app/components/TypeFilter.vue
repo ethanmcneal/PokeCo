@@ -15,5 +15,5 @@ const model = computed({
 </script>
 
 <template>
-  <USelect v-model="model" :items="items" class="w-40 capitalize" />
+  <USelect v-model="model" :items="items" aria-label="Filter by type" class="w-40 capitalize" />
 </template>

@@ -1,6 +1,6 @@
 import type { PublicUser } from '../../../shared/types'
 import { findUserByEmail } from '../../repositories/user.repository'
-import { rateLimit } from '../../utils/rate-limit'
+import { rateLimit, rateLimitBypassed } from '../../utils/rate-limit'
 import { credentialsSchema } from '../../utils/validation'
 
 // A real password hash of a throwaway value, computed once. When the email has
@@ -17,7 +17,7 @@ function getDecoyHash(): Promise<string> {
 // POST /api/auth/login (specs/04-api-contract.md, AC-4.2).
 export default defineEventHandler(async (event): Promise<PublicUser> => {
   const ip = getRequestIP(event, { xForwardedFor: true }) ?? 'unknown'
-  if (!rateLimit(`login:${ip}`, 10, 60_000).allowed) {
+  if (!rateLimitBypassed() && !rateLimit(`login:${ip}`, 10, 60_000).allowed) {
     throw createError({
       statusCode: 429,
       statusMessage: 'Too Many Requests',

@@ -44,7 +44,11 @@ function species(overrides: Partial<RawPokemonSpecies> = {}): RawPokemonSpecies 
     flavor_text_entries: [
       // A non-English entry first, plus PokéAPI's control-character padding, to
       // prove language selection and cleaning.
-      { flavor_text: 'french text', language: { name: 'fr', url: '' }, version: { name: 'x', url: '' } },
+      {
+        flavor_text: 'french text',
+        language: { name: 'fr', url: '' },
+        version: { name: 'x', url: '' },
+      },
       {
         flavor_text: 'A strange\nseed was\fplanted on its back at birth.',
         language: { name: 'en', url: '' },

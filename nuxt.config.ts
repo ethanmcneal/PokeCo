@@ -25,7 +25,9 @@ const securityHeaders: Record<string, string> = {
 
 export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
-  devtools: { enabled: true },
+  // Disabled: the DevTools client emits a Vite hook-compatibility warning on dev
+  // boot with the current Vite, and it isn't needed for the app itself.
+  devtools: { enabled: false },
 
   css: ['~/assets/css/main.css'],
 
