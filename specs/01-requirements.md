@@ -25,6 +25,12 @@ The brief is deliberately open. Our reading of where the real work is:
   own design work concentrates: API design, auth, and data modelling.
 - **The Grass → shiny rule is a business rule**, not a UI detail. It lives in the server's service
   layer and is expressed once, so it can be tested and explained in isolation.
+- **We scope the shiny form to the detail view**, where the brief lists it alongside Name / Height /
+  Abilities as information you "explore about a Pokémon." The detail page shows the canonical sprite
+  *and* a clearly labelled shiny form (additive, not a swap). Browse and collection deliberately keep
+  the **canonical** sprite everywhere: those are scanning surfaces where recognisability matters, and
+  recolouring only Grass types would make the grid inconsistent and harder to read. Accordingly, only
+  the detail DTO carries `hasShinyForm` / `shinySpriteUrl`; the list DTO stays canonical-only.
 
 ### In scope
 
@@ -70,7 +76,8 @@ Written so each maps directly to a testable behaviour.
 ### US-2 — Find
 > As a visitor, I can search for a Pokémon by name so I can find one quickly.
 
-- **AC-2.1** Entering a name navigates to / filters to the matching Pokémon.
+- **AC-2.1** Entering a (partial) name filters to the matching Pokémon — a substring match, so
+  `mag` surfaces magnemite, magneton, and magmar.
 - **AC-2.2** A name with no match shows a friendly "not found" state, not an error.
 
 ### US-3 — Explore

@@ -1,2 +1,30 @@
 @import 'tailwindcss';
 @import '@nuxt/ui';
+
+/* Tailwind's Preflight resets buttons to cursor: default. Restore the pointer
+   for enabled buttons so every control (Catch, Release, nav) reads as clickable. */
+@layer base {
+  button:not(:disabled) {
+    cursor: pointer;
+  }
+}
+
+/* Catch confirmation pop. Gated on prefers-reduced-motion so users who opt out
+   of motion get the instant state change + toast instead (specs/05-frontend-ux.md). */
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .animate-pop {
+    animation: pop 0.6s ease-out;
+  }
+}

@@ -2,12 +2,20 @@
 import type { PokemonListItem } from '#shared/types'
 
 defineProps<{ pokemon: PokemonListItem }>()
+
+// Carry the current browse state (page/search/type) onto the detail link so
+// "Back to browse" can return to the exact same view. On the default view the
+// query is empty, so the link stays clean.
+const route = useRoute()
+const detailTo = (name: string) => ({ path: `/pokemon/${name}`, query: route.query })
 </script>
 
 <template>
-  <NuxtLink :to="`/pokemon/${pokemon.name}`" class="block">
-    <UCard class="h-full transition hover:ring-2 hover:ring-primary">
-      <div class="flex flex-col items-center gap-2 text-center">
+  <UCard class="h-full transition hover:ring-2 hover:ring-primary">
+    <div class="flex flex-col items-center gap-2 text-center">
+      <!-- Only the sprite + name navigate; the catch button is a separate control
+           (avoids nesting an interactive button inside a link). -->
+      <NuxtLink :to="detailTo(pokemon.name)" class="flex flex-col items-center gap-2">
         <img
           v-if="pokemon.spriteUrl"
           :src="pokemon.spriteUrl"
@@ -21,10 +29,13 @@ defineProps<{ pokemon: PokemonListItem }>()
           no image
         </div>
         <span class="font-medium capitalize">{{ pokemon.name }}</span>
-        <div class="flex flex-wrap justify-center gap-1">
-          <TypeBadge v-for="t in pokemon.types" :key="t" :type="t" />
-        </div>
+      </NuxtLink>
+
+      <div class="flex flex-wrap justify-center gap-1">
+        <TypeBadge v-for="t in pokemon.types" :key="t" :type="t" />
       </div>
-    </UCard>
-  </NuxtLink>
+
+      <CatchButton :pokemon-id="pokemon.id" :name="pokemon.name" :sprite-url="pokemon.spriteUrl" />
+    </div>
+  </UCard>
 </template>

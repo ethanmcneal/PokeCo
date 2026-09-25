@@ -112,27 +112,27 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 8 — Detail UI
 *Depends on: 3, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `/pokemon/[name]` renders name, height (m), abilities (hidden tagged), types — AC-3.1–3.3
-- [ ] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
-- [ ] `404` name renders the not-found state
-- **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent).
+- [x] `/pokemon/[name]` renders name, height (m), weight (kg), abilities (hidden tagged), types — AC-3.1–3.3
+- [x] `ShinyImage` shown only when `hasShinyForm` (and `shinySpriteUrl` present), clearly labelled — AC-3.4
+- [x] `404` name renders the not-found state (other errors + loading skeleton handled too)
+- **Done when:** a grass and a non-grass Pokémon both render correctly (shiny present / absent). ✅ verified live (see Phase 10 smoke).
 
 ## Phase 9 — Auth UI
 *Depends on: 4, 6. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `/register` and `/login` forms posting to the auth endpoints; error display
-- [ ] Header reflects logged-in state; logout clears session
-- **Done when:** a user can register, log out, and log back in through the UI.
+- [x] `/register` and `/login` (shared `AuthForm`) posting to the auth endpoints; server error display; redirect-back after auth (open-redirect guarded)
+- [x] Header reflects logged-in state; logout clears session (from Phase 6 `AppHeader`); `auth` middleware now passes a `redirect` query
+- **Done when:** a user can register, log out, and log back in through the UI. ✅ verified live (see Phase 10 smoke).
 
 ## Phase 10 — Collection UI & catch flow
 *Depends on: 5, 7, 8, 9. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `useCollectionStore` (Pinia): hydrate from `GET /api/collection`; holds caught ids + entries
-- [ ] `CatchButton` with optimistic toggle + rollback on error; prompts login when logged out — AC-5.4
-- [ ] Catch confirmation micro-interaction (Poké Ball / card settle + toast), gated on `prefers-reduced-motion`
-- [ ] `/collection` renders `CollectionList`/`CollectionItem` with human-readable caught-at — AC-6.1/6.2
-- [ ] Release action updates the store optimistically — AC-7.1
-- **Done when:** catching on grid/detail reflects instantly with the confirmation (and an instant fallback under reduced-motion), the collection page shows entries + times, and release works.
+- [x] `useCollectionStore` (Pinia): hydrate from `GET /api/collection`; holds caught ids + entries
+- [x] `CatchButton` with optimistic toggle + rollback on error; prompts login when logged out — AC-5.4
+- [x] Catch confirmation micro-interaction (card pop + toast), gated on `prefers-reduced-motion`
+- [x] `/collection` renders `CollectionList`/`CollectionItem` with human-readable caught-at — AC-6.1/6.2
+- [x] Release action updates the store optimistically — AC-7.1
+- **Done when:** catching on grid/detail reflects instantly with the confirmation (and an instant fallback under reduced-motion), the collection page shows entries + times, and release works. ✅ verified live end-to-end: logged in, caught Bulbasaur (button → "Caught ✓", card highlight + "Gotcha!" toast), `/collection` showed the entry with "Caught 11 seconds ago", and Release returned the empty state. Backend confirmed via API smoke (register 201 → catch 201 → list → release 204 → empty).
 
 ## Phase 11 — Test coverage completion
 *Depends on: features above. Spec: [06-testing-quality](./06-testing-quality.md).*
@@ -151,4 +151,5 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 - [ ] Accessibility/responsive pass against the [05](./05-frontend-ux.md) UX bar: alt text, keyboard/focus, non-color-only cues, `prefers-reduced-motion`, error+retry states, mobile reflow
 - [ ] Final security review of the shipped code against [07](./07-security.md)
 - [ ] Root `README.md` (personal voice): quick-start, why spec-driven development, how AI tooling was directed *and validated*, note on the depth to work without it, how requirements were taken to the intended outcome (not the literal request), architecture summary linking to `specs/`, ADR list, "productionizing / with more time" notes
+  - "With more time" candidate: **client bundle analysis** (`nuxi analyze`). The production client is ~24 tree-shaken chunks (~980 KB raw / ~300 KB gzip), most of it Nuxt UI + the Vue runtime; unused library code (e.g. the date-picker) is already dropped. Not a bug — a trimming opportunity if bundle size ever matters.
 - **Done when:** CI is green and a fresh clone runs from the README instructions alone.
