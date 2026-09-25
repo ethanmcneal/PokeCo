@@ -106,29 +106,36 @@ export async function getPokemonDetail(name: string): Promise<PokemonDetail> {
 }
 
 /**
- * List for the browse grid. Source depends on the options (search precedence
- * over type): a single name lookup, a type's members, or the default page.
+ * List for the browse grid. Type and search compose: a `type` narrows the
+ * universe to that type's members, and `search` then substring-filters within
+ * it. With neither, we page PokéAPI's master list. Alternate battle forms
+ * (ids >= 10000) are excluded from the filtered views.
  */
 export async function getPokemonList(opts: ListOptions): Promise<Page<PokemonListItem>> {
   const { limit, offset, search, type } = opts
+  const q = search?.trim().toLowerCase()
 
-  if (search) {
-    // Substring match over the full name list (PokéAPI has no search endpoint),
-    // kept in national-dex order. No match yields an empty page, not an error.
-    const q = search.trim().toLowerCase()
+  // Type filter: the members of that type become the candidate set, which
+  // search (if present) then narrows — so "electric" + "mag" stays electric.
+  if (type) {
+    const { pokemon } = await fetchTypeMembers(type)
+    let names = pokemon
+      .filter((entry) => idFromUrl(entry.pokemon.url) < FORM_ID_THRESHOLD)
+      .map((entry) => entry.pokemon.name)
+    if (q) names = names.filter((name) => name.includes(q))
+    const items = await toListItems(names.slice(offset, offset + limit))
+    return { items, total: names.length, limit, offset }
+  }
+
+  // Search only: substring match over the full name list (PokéAPI has no search
+  // endpoint), kept in national-dex order. A miss yields an empty page, no error.
+  if (q) {
     const { results } = await fetchAllPokemonNames()
     const matches = results.filter(
       (r) => idFromUrl(r.url) < FORM_ID_THRESHOLD && r.name.includes(q),
     )
     const items = await toListItems(matches.slice(offset, offset + limit).map((r) => r.name))
     return { items, total: matches.length, limit, offset }
-  }
-
-  if (type) {
-    const { pokemon } = await fetchTypeMembers(type)
-    const names = pokemon.map((entry) => entry.pokemon.name)
-    const items = await toListItems(names.slice(offset, offset + limit))
-    return { items, total: names.length, limit, offset }
   }
 
   const { count, results } = await fetchPokemonList(limit, offset)

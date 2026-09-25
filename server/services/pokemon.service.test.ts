@@ -238,16 +238,22 @@ describe('getPokemonList — source selection', () => {
     expect(page.items.map((i) => i.name)).toEqual(['bulbasaur', 'oddish'])
   })
 
-  it('search takes precedence over type', async () => {
-    asMock(fetchAllPokemonNames).mockResolvedValue({
-      count: 1,
-      results: [{ name: 'pikachu', url: '' }],
+  it('composes search within a selected type (stays in-type)', async () => {
+    asMock(fetchTypeMembers).mockResolvedValue({
+      pokemon: [
+        { slot: 1, pokemon: { name: 'magnemite', url: '' } },
+        { slot: 1, pokemon: { name: 'pikachu', url: '' } }, // electric, but not a "mag" match
+        { slot: 1, pokemon: { name: 'magneton', url: '' } },
+      ],
     })
     asMock(fetchPokemonByName).mockImplementation((name: string) => Promise.resolve(raw({ name })))
 
-    await getPokemonList({ limit: 20, offset: 0, search: 'pikachu', type: 'grass' })
+    const page = await getPokemonList({ limit: 20, offset: 0, search: 'mag', type: 'electric' })
 
-    expect(fetchAllPokemonNames).toHaveBeenCalled()
-    expect(fetchTypeMembers).not.toHaveBeenCalled()
+    expect(fetchTypeMembers).toHaveBeenCalledWith('electric')
+    // Filtered within the type's members — not a global name search.
+    expect(fetchAllPokemonNames).not.toHaveBeenCalled()
+    expect(page.items.map((i) => i.name)).toEqual(['magnemite', 'magneton'])
+    expect(page.total).toBe(2)
   })
 })

@@ -85,7 +85,9 @@ Sourcing depends on the params (handled in `pokemon.service`):
   page, not an error ([AC-2.2](./01-requirements.md)).
 - **`type`:** the members of that type (from PokéAPI's `type/{name}` endpoint), paginated by
   `limit`/`offset`. An unknown `type` yields `400`.
-- `search` takes precedence over `type` when both are supplied.
+- **`search` + `type` together compose:** the type narrows the candidate set, then `search`
+  substring-filters within it (e.g. `type=electric` + `search=mag` → magnemite, magneton — still
+  electric). The same form exclusion applies.
 
 The response shape is identical in every case (`Page<PokemonListItem>`).
 
