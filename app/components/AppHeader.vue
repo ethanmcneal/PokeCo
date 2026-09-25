@@ -2,10 +2,12 @@
 // Auth-aware navigation. Session truth comes from nuxt-auth-utils' useUserSession
 // (available during SSR), so the correct nav renders on first paint.
 const { loggedIn, user, clear } = useUserSession()
+const collection = useCollectionStore()
 
 async function logout() {
   await $fetch('/api/auth/logout', { method: 'POST' })
   await clear()
+  collection.reset()
   await navigateTo('/login')
 }
 </script>

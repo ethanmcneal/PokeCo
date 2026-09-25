@@ -127,12 +127,12 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 ## Phase 10 — Collection UI & catch flow
 *Depends on: 5, 7, 8, 9. Spec: [05-frontend-ux](./05-frontend-ux.md).*
 
-- [ ] `useCollectionStore` (Pinia): hydrate from `GET /api/collection`; holds caught ids + entries
-- [ ] `CatchButton` with optimistic toggle + rollback on error; prompts login when logged out — AC-5.4
-- [ ] Catch confirmation micro-interaction (Poké Ball / card settle + toast), gated on `prefers-reduced-motion`
-- [ ] `/collection` renders `CollectionList`/`CollectionItem` with human-readable caught-at — AC-6.1/6.2
-- [ ] Release action updates the store optimistically — AC-7.1
-- **Done when:** catching on grid/detail reflects instantly with the confirmation (and an instant fallback under reduced-motion), the collection page shows entries + times, and release works.
+- [x] `useCollectionStore` (Pinia): hydrate from `GET /api/collection`; holds caught ids + entries
+- [x] `CatchButton` with optimistic toggle + rollback on error; prompts login when logged out — AC-5.4
+- [x] Catch confirmation micro-interaction (card pop + toast), gated on `prefers-reduced-motion`
+- [x] `/collection` renders `CollectionList`/`CollectionItem` with human-readable caught-at — AC-6.1/6.2
+- [x] Release action updates the store optimistically — AC-7.1
+- **Done when:** catching on grid/detail reflects instantly with the confirmation (and an instant fallback under reduced-motion), the collection page shows entries + times, and release works. ✅ verified live end-to-end: logged in, caught Bulbasaur (button → "Caught ✓", card highlight + "Gotcha!" toast), `/collection` showed the entry with "Caught 11 seconds ago", and Release returned the empty state. Backend confirmed via API smoke (register 201 → catch 201 → list → release 204 → empty).
 
 ## Phase 11 — Test coverage completion
 *Depends on: features above. Spec: [06-testing-quality](./06-testing-quality.md).*

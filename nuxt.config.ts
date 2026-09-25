@@ -33,7 +33,7 @@ export default defineNuxtConfig({
     '/**': { headers: securityHeaders },
   },
 
-  modules: ['@nuxt/eslint', 'nuxt-auth-utils', '@nuxt/ui'],
+  modules: ['@nuxt/eslint', 'nuxt-auth-utils', '@nuxt/ui', '@pinia/nuxt'],
 
   // Strict TypeScript across the app (see specs/06-testing-quality.md).
   typescript: {

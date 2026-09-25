@@ -53,11 +53,12 @@ const notFound = computed(() => error.value?.statusCode === 404)
       </div>
 
       <div class="space-y-4">
-        <div>
+        <div class="space-y-2">
           <h1 class="text-3xl font-bold capitalize">{{ data.name }}</h1>
-          <div class="mt-1 flex gap-1">
+          <div class="flex gap-1">
             <TypeBadge v-for="t in data.types" :key="t" :type="t" />
           </div>
+          <CatchButton :pokemon-id="data.id" :name="data.name" :sprite-url="data.spriteUrl" />
         </div>
 
         <dl class="grid grid-cols-2 gap-x-8 gap-y-2 text-sm">
