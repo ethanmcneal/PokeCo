@@ -21,5 +21,10 @@ onBeforeUnmount(() => clearTimeout(timer))
 </script>
 
 <template>
-  <UInput v-model="local" placeholder="Search by name…" class="w-full sm:w-64" />
+  <UInput
+    v-model="local"
+    placeholder="Search by name…"
+    aria-label="Search Pokémon by name"
+    class="w-full sm:w-64"
+  />
 </template>

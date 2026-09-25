@@ -1,0 +1,51 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+# Cancel superseded runs on the same ref to save CI minutes.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    env:
+      # Build/prepare need these present; values are throwaway (no secrets in CI).
+      DATABASE_URL: file:./dev.db
+      NUXT_SESSION_PASSWORD: ci-session-password-at-least-32-chars
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      # Runs the allow-listed build scripts (prisma generate, nuxt prepare) via postinstall.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Lint
+        run: pnpm lint
+
+      - name: Format check
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Unit & integration tests
+        run: pnpm test
+
+      # Supply-chain gate: fail on known high-severity advisories.
+      - name: Audit dependencies
+        run: pnpm audit --audit-level=high
+
+      - name: Build
+        run: pnpm build

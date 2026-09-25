@@ -51,6 +51,7 @@ async function onClick() {
     :variant="caught ? 'soft' : 'solid'"
     :loading="pending"
     :class="popping ? 'animate-pop' : ''"
+    :aria-label="caught ? `Caught ${name}` : `Catch ${name}`"
     size="sm"
     @click.stop.prevent="onClick"
   >
