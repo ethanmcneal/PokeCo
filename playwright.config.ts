@@ -9,9 +9,13 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
+  // The journey asserts on live PokéAPI-backed pages (a browse render fans out to
+  // ~25 upstream calls on a cold cache), so allow more than the 5s default.
+  expect: { timeout: 10_000 },
   use: {
     baseURL: 'http://localhost:3000',
     trace: 'on-first-retry',
+    navigationTimeout: 30_000,
   },
   // Run E2E against the production build: it's faster and more stable than the
   // dev server (no on-demand route compilation), and closer to what ships. The
@@ -27,6 +31,9 @@ export default defineConfig({
       NUXT_SESSION_PASSWORD:
         process.env.NUXT_SESSION_PASSWORD ?? 'e2e-session-password-at-least-32-characters',
       DATABASE_URL: `file:${process.cwd()}/prisma/dev.db`,
+      // Auth endpoints are rate-limited (5 registers/min per IP); the E2E drives
+      // many from one IP, so disable it for the test server only.
+      E2E_DISABLE_RATE_LIMIT: 'true',
     },
   },
   // All three engines are configured. `pnpm test:e2e` runs Chromium + Firefox

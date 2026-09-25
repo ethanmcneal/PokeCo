@@ -44,3 +44,10 @@ export function rateLimit(
 export function resetRateLimits(): void {
   buckets.clear()
 }
+
+// Escape hatch for E2E, where many auth requests come from a single IP and would
+// otherwise trip the limiter. Off unless explicitly enabled; production never
+// sets it, so the protection stays on where it matters.
+export function rateLimitBypassed(): boolean {
+  return process.env.E2E_DISABLE_RATE_LIMIT === 'true'
+}
