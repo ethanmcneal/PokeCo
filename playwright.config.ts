@@ -29,6 +29,9 @@ export default defineConfig({
       DATABASE_URL: `file:${process.cwd()}/prisma/dev.db`,
     },
   },
+  // All three engines are configured. `pnpm test:e2e` runs Chromium + Firefox
+  // (reliable on any machine); `pnpm test:e2e:all` adds WebKit, whose Playwright
+  // build fails to launch on some setups (older macOS, restricted environments).
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
     { name: 'firefox', use: { ...devices['Desktop Firefox'] } },
