@@ -18,7 +18,7 @@ onMounted(() => store.hydrate())
     </div>
 
     <!-- Loading -->
-    <div v-if="!store.hydrated" class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div v-if="!store.hydrated" class="grid gap-3 lg:grid-cols-2">
       <USkeleton v-for="n in 6" :key="n" class="h-24 w-full rounded-lg" />
     </div>
 
@@ -29,7 +29,7 @@ onMounted(() => store.hydrate())
     </div>
 
     <!-- Collection -->
-    <div v-else class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+    <div v-else class="grid gap-3 lg:grid-cols-2">
       <CollectionItem v-for="e in store.entries" :key="e.pokemonId" :entry="e" />
     </div>
   </div>
