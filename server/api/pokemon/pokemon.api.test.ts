@@ -24,6 +24,8 @@ const sampleDetail: PokemonDetail = {
   abilities: [{ name: 'overgrow', isHidden: false }],
   types: ['grass'],
   spriteUrl: 'default.png',
+  genus: 'Seed Pokémon',
+  description: 'A strange seed was planted on its back at birth.',
   hasShinyForm: true,
   shinySpriteUrl: 'shiny.png',
 }

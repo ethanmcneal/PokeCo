@@ -39,6 +39,8 @@ interface PokemonDetail {
   abilities: Ability[]
   types: string[]
   spriteUrl: string | null
+  genus: string | null       // species genus, e.g. "Seed Pokémon" (from /pokemon-species)
+  description: string | null // Pokédex flavour text, cleaned; null if the species lookup misses
   hasShinyForm: boolean      // result of the shiny-form rule (server SHINY_TYPES; currently Grass)
   shinySpriteUrl: string | null   // populated when hasShinyForm and upstream has one, else null — AC-3.4
 }
@@ -114,6 +116,8 @@ Detail for one Pokémon by name (or id).
   ],
   "types": ["grass", "poison"],
   "spriteUrl": "https://.../1.png",
+  "genus": "Seed Pokémon",
+  "description": "A strange seed was planted on its back at birth.",
   "hasShinyForm": true,
   "shinySpriteUrl": "https://.../shiny/1.png"
 }

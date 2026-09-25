@@ -39,6 +39,7 @@ describe('catchPokemon', () => {
       abilities: [],
       types: [],
       sprites: { front_default: 'pika.png', front_shiny: 'pika-shiny.png' },
+      species: { name: 'pikachu', url: '' },
     })
     vi.mocked(repo.catchPokemon).mockResolvedValue(
       caught({ pokemonId: 25, pokemonName: 'pikachu', spriteUrl: 'pika.png' }),
@@ -69,6 +70,7 @@ describe('catchPokemon', () => {
       abilities: [],
       types: [],
       sprites: { front_default: null, front_shiny: null },
+      species: { name: 'bulbasaur', url: '' },
     })
     vi.mocked(repo.catchPokemon).mockResolvedValue(caught({ spriteUrl: '' }))
 

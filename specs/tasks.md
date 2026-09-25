@@ -151,4 +151,5 @@ Status key: `[ ]` todo · `[~]` in progress · `[x]` done
 - [ ] Accessibility/responsive pass against the [05](./05-frontend-ux.md) UX bar: alt text, keyboard/focus, non-color-only cues, `prefers-reduced-motion`, error+retry states, mobile reflow
 - [ ] Final security review of the shipped code against [07](./07-security.md)
 - [ ] Root `README.md` (personal voice): quick-start, why spec-driven development, how AI tooling was directed *and validated*, note on the depth to work without it, how requirements were taken to the intended outcome (not the literal request), architecture summary linking to `specs/`, ADR list, "productionizing / with more time" notes
+  - "With more time" candidate: **client bundle analysis** (`nuxi analyze`). The production client is ~24 tree-shaken chunks (~980 KB raw / ~300 KB gzip), most of it Nuxt UI + the Vue runtime; unused library code (e.g. the date-picker) is already dropped. Not a bug — a trimming opportunity if bundle size ever matters.
 - **Done when:** CI is green and a fresh clone runs from the README instructions alone.

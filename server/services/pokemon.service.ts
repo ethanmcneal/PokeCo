@@ -2,8 +2,13 @@
 // and owns the Grass → shiny rule. Depends on the pokeapi client, never on HTTP
 // or Prisma. See specs/02-architecture.md and specs/04-api-contract.md.
 import type { Ability, Page, PokemonDetail, PokemonListItem } from '../../shared/types'
-import type { RawPokemon } from '../utils/pokeapi'
-import { fetchPokemonByName, fetchPokemonList, fetchTypeMembers } from '../utils/pokeapi'
+import type { RawNamedResource, RawPokemon, RawPokemonSpecies } from '../utils/pokeapi'
+import {
+  fetchPokemonByName,
+  fetchPokemonList,
+  fetchPokemonSpecies,
+  fetchTypeMembers,
+} from '../utils/pokeapi'
 
 // The set of types whose shiny form we surface. The requirement is Grass-only
 // (AC-3.4); expressing it as a policy set keeps the rule data-driven and easy to
@@ -12,6 +17,22 @@ const SHINY_TYPES: readonly string[] = ['grass']
 
 function toTypes(raw: RawPokemon): string[] {
   return raw.types.map((t) => t.type.name)
+}
+
+/** The first entry in the caller's preferred language (English). */
+function firstEnglish<T extends { language: RawNamedResource }>(entries: T[]): T | undefined {
+  return entries.find((e) => e.language.name === 'en')
+}
+
+// PokéAPI flavour text is padded with control characters (newlines, form feeds)
+// and soft hyphens from its original fixed-width game text. Normalise to a plain
+// single-spaced sentence for the UI.
+function cleanFlavorText(text: string): string {
+  return text
+    .replace(/\u00ad\s*/g, '') // soft hyphens: rejoin words split across lines
+    .replace(/[\n\f\r]+/g, ' ') // hard breaks → spaces
+    .replace(/\s+/g, ' ')
+    .trim()
 }
 
 function toListItem(raw: RawPokemon): PokemonListItem {
@@ -23,13 +44,18 @@ function toListItem(raw: RawPokemon): PokemonListItem {
   }
 }
 
-function toDetail(raw: RawPokemon): PokemonDetail {
+// Species data is optional: if the upstream lookup fails we still render the
+// core detail, just without the description/genus.
+function toDetail(raw: RawPokemon, species: RawPokemonSpecies | null): PokemonDetail {
   const types = toTypes(raw)
   const hasShinyForm = types.some((t) => SHINY_TYPES.includes(t))
   const abilities: Ability[] = raw.abilities.map((a) => ({
     name: a.ability.name,
     isHidden: a.is_hidden,
   }))
+
+  const flavor = species && firstEnglish(species.flavor_text_entries)
+  const genus = species && firstEnglish(species.genera)
 
   return {
     id: raw.id,
@@ -39,6 +65,8 @@ function toDetail(raw: RawPokemon): PokemonDetail {
     abilities,
     types,
     spriteUrl: raw.sprites.front_default,
+    genus: genus ? genus.genus : null,
+    description: flavor ? cleanFlavorText(flavor.flavor_text) : null,
     hasShinyForm,
     // The business rule (AC-3.4): shiny form is surfaced only for SHINY_TYPES.
     shinySpriteUrl: hasShinyForm ? raw.sprites.front_shiny : null,
@@ -58,8 +86,12 @@ export interface ListOptions {
   type?: string
 }
 
-export function getPokemonDetail(name: string): Promise<PokemonDetail> {
-  return fetchPokemonByName(name).then(toDetail)
+export async function getPokemonDetail(name: string): Promise<PokemonDetail> {
+  const raw = await fetchPokemonByName(name)
+  // The description + genus come from the species resource. Degrade gracefully:
+  // a species miss leaves those fields null rather than failing the whole page.
+  const species = await fetchPokemonSpecies(raw.species.name).catch(() => null)
+  return toDetail(raw, species)
 }
 
 /**

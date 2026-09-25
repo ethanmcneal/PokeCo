@@ -38,10 +38,29 @@ export interface RawPokemon {
   abilities: RawAbilityEntry[]
   types: RawTypeEntry[]
   sprites: RawSprites
+  species: RawNamedResource
 }
 
 export interface RawTypeResponse {
   pokemon: { slot: number; pokemon: RawNamedResource }[]
+}
+
+// A "flavour text" entry is a Pokédex description; the same species has many,
+// one per language and game version. We surface the first English one.
+export interface RawFlavorTextEntry {
+  flavor_text: string
+  language: RawNamedResource
+  version: RawNamedResource
+}
+
+export interface RawGenus {
+  genus: string // e.g. "Seed Pokémon"
+  language: RawNamedResource
+}
+
+export interface RawPokemonSpecies {
+  flavor_text_entries: RawFlavorTextEntry[]
+  genera: RawGenus[]
 }
 
 // --- Client ---
@@ -74,6 +93,22 @@ export const fetchPokemonByName = defineCachedFunction(
     $fetch<RawPokemon>(`${baseUrl()}/pokemon/${encodeURIComponent(name.toLowerCase())}`),
   {
     name: 'pokeapi:pokemon',
+    maxAge: CACHE_MAX_AGE,
+    getKey: (name) => name.toLowerCase(),
+  },
+)
+
+/**
+ * Species-level data for one Pokémon (Pokédex description + genus). Separate
+ * upstream resource from {@link fetchPokemonByName}. Throws on 404.
+ */
+export const fetchPokemonSpecies = defineCachedFunction(
+  (name: string): Promise<RawPokemonSpecies> =>
+    $fetch<RawPokemonSpecies>(
+      `${baseUrl()}/pokemon-species/${encodeURIComponent(name.toLowerCase())}`,
+    ),
+  {
+    name: 'pokeapi:species',
     maxAge: CACHE_MAX_AGE,
     getKey: (name) => name.toLowerCase(),
   },

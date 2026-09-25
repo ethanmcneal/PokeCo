@@ -1,6 +1,11 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
-import type { RawPokemon } from '../utils/pokeapi'
-import { fetchPokemonByName, fetchPokemonList, fetchTypeMembers } from '../utils/pokeapi'
+import type { RawPokemon, RawPokemonSpecies } from '../utils/pokeapi'
+import {
+  fetchPokemonByName,
+  fetchPokemonList,
+  fetchPokemonSpecies,
+  fetchTypeMembers,
+} from '../utils/pokeapi'
 import { getPokemonDetail, getPokemonList } from './pokemon.service'
 
 // The upstream client is mocked so these tests are pure and offline; they
@@ -9,6 +14,7 @@ import { getPokemonDetail, getPokemonList } from './pokemon.service'
 vi.mock('../utils/pokeapi', () => ({
   fetchPokemonByName: vi.fn(),
   fetchPokemonList: vi.fn(),
+  fetchPokemonSpecies: vi.fn(),
   fetchTypeMembers: vi.fn(),
 }))
 
@@ -26,12 +32,35 @@ function raw(overrides: Partial<RawPokemon> = {}): RawPokemon {
     ],
     types: [{ slot: 1, type: { name: 'grass', url: '' } }],
     sprites: { front_default: 'default.png', front_shiny: 'shiny.png' },
+    species: { name: 'bulbasaur', url: '' },
+    ...overrides,
+  }
+}
+
+function species(overrides: Partial<RawPokemonSpecies> = {}): RawPokemonSpecies {
+  return {
+    flavor_text_entries: [
+      // A non-English entry first, plus PokéAPI's control-character padding, to
+      // prove language selection and cleaning.
+      { flavor_text: 'french text', language: { name: 'fr', url: '' }, version: { name: 'x', url: '' } },
+      {
+        flavor_text: 'A strange\nseed was\fplanted on its back at birth.',
+        language: { name: 'en', url: '' },
+        version: { name: 'red', url: '' },
+      },
+    ],
+    genera: [
+      { genus: 'たねポケモン', language: { name: 'ja', url: '' } },
+      { genus: 'Seed Pokémon', language: { name: 'en', url: '' } },
+    ],
     ...overrides,
   }
 }
 
 beforeEach(() => {
   vi.clearAllMocks()
+  // Sensible default for the detail path; individual tests override as needed.
+  asMock(fetchPokemonSpecies).mockResolvedValue(species())
 })
 
 describe('getPokemonDetail', () => {
@@ -52,6 +81,29 @@ describe('getPokemonDetail', () => {
       { name: 'overgrow', isHidden: false },
       { name: 'chlorophyll', isHidden: true },
     ])
+  })
+
+  it('adds the English genus and a cleaned description from the species', async () => {
+    asMock(fetchPokemonByName).mockResolvedValue(raw())
+    asMock(fetchPokemonSpecies).mockResolvedValue(species())
+
+    const detail = await getPokemonDetail('bulbasaur')
+
+    expect(fetchPokemonSpecies).toHaveBeenCalledWith('bulbasaur')
+    expect(detail.genus).toBe('Seed Pokémon')
+    // Control characters collapsed to single spaces.
+    expect(detail.description).toBe('A strange seed was planted on its back at birth.')
+  })
+
+  it('degrades gracefully when the species lookup fails', async () => {
+    asMock(fetchPokemonByName).mockResolvedValue(raw())
+    asMock(fetchPokemonSpecies).mockRejectedValue(new Error('404'))
+
+    const detail = await getPokemonDetail('bulbasaur')
+
+    expect(detail.genus).toBeNull()
+    expect(detail.description).toBeNull()
+    expect(detail.name).toBe('bulbasaur') // core detail still renders
   })
 
   it('exposes the shiny form for a Grass type (AC-3.4)', async () => {
