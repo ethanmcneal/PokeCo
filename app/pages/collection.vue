@@ -29,7 +29,7 @@ onMounted(() => store.hydrate())
     </div>
 
     <!-- Collection -->
-    <div v-else class="grid gap-3 lg:grid-cols-2">
+    <div v-else class="grid gap-3 lg:grid-cols-3">
       <CollectionItem v-for="e in store.entries" :key="e.pokemonId" :entry="e" />
     </div>
   </div>
