@@ -5,9 +5,9 @@ Pokémon to see its details, and — once signed in — catch Pokémon into your
 collection with a caught-at timestamp. Built with Nuxt (Vue 3 + Nitro),
 TypeScript, Prisma/SQLite, and Nuxt UI.
 
-The brief was deliberately open, so I treated it as a design problem first and a
-coding problem second: the reasoning lives in [`specs/`](./specs), and the code
-implements it. This README is the orientation; the specs are the detail.
+The brief was open, so I treated it as a design problem first and a
+coding problem second: most of my reasoning lives in [`specs/`](./specs), and the code
+implements it. This README is a brief overview; the specs are much more detailed.
 
 ## Quick start
 
@@ -30,16 +30,20 @@ Then register an account in the app and start catching.
 
 ### Everyday scripts
 
-| Command                           | What it does                                               |
-| --------------------------------- | ---------------------------------------------------------- |
-| `pnpm dev`                        | Dev server with HMR                                        |
-| `pnpm test`                       | Unit + integration tests (Vitest)                          |
-| `pnpm test:e2e`                   | End-to-end journeys (Playwright, Chromium/Firefox/WebKit)¹ |
-| `pnpm typecheck`                  | `vue-tsc` in strict mode                                   |
-| `pnpm lint` / `pnpm format:check` | ESLint / Prettier                                          |
-| `pnpm build` && `pnpm preview`    | Production build and local preview                         |
+| Command                           | What it does                                          |
+| --------------------------------- | ----------------------------------------------------- |
+| `pnpm dev`                        | Dev server with HMR                                   |
+| `pnpm test`                       | Unit + integration tests (Vitest)                     |
+| `pnpm test:e2e`                   | End-to-end journeys (Playwright, Chromium + Firefox)¹ |
+| `pnpm test:e2e:all`               | Same, adding WebKit¹ ²                                |
+| `pnpm typecheck`                  | `vue-tsc` in strict mode                              |
+| `pnpm lint` / `pnpm format:check` | ESLint / Prettier                                     |
+| `pnpm build` && `pnpm preview`    | Production build and local preview                    |
 
 ¹ First run needs the browser binaries: `pnpm exec playwright install`.
+² WebKit is configured but kept out of the default run — its Playwright build fails
+to launch on some setups (older macOS, restricted environments), so the default
+suite stays reliable on any machine.
 
 ## What it does
 
@@ -57,9 +61,15 @@ Then register an account in the app and start catching.
 
 ## Why spec-driven development
 
-I wrote the specs before the code because the brief's real difficulty isn't any
-single feature — it's the decisions around them (where the domain logic lives,
-how auth and persistence are modelled, what "if Grass, show shiny" really means).
+Spec-driven development is a way of approaching ai-driven development that I've come to love recently.
+It's a very efficient way to make use of the powerful AI tools available but still being in control.
+It's a great way of breaking a project into pieces, setting guardrails for your LLM to follow, and
+being able to validate the output produced by the AI at meaningful checkpoints. (usually the end of a task
+or phase as seen in tasks.md)
+
+The specs are written before any code because the brief's real difficulty isn't any single feature —
+it's the decisions around them. (where the domain logic lives, how auth and persistence are modeled,
+what "if Grass, show shiny" really means).
 Writing those down first meant:
 
 - the hard thinking happened once, in prose, where it's cheap to change;
@@ -67,8 +77,9 @@ Writing those down first meant:
 - and every non-obvious call is reviewable on its own, not reverse-engineered
   from a diff.
 
-The specs use "we"; this README is where I speak in the first person about how I
-worked.
+I came to the conclusion from the job description that developing in this way comes close to
+how you expect AI assistance to be used in this role. Which aligns closely with
+my personal thoughts on the AI space as well.
 
 ## Directing (and validating) AI tooling
 
@@ -146,7 +157,9 @@ Targeted, not exhaustive — cover the business rules and the critical path well
   the auth guard → `401`, and the documented success codes/shapes.
 - **End-to-end** (Playwright) — the critical journey (register → browse → open →
   catch → see it in the collection) plus the logged-out `/collection` → `/login`
-  guard, run across **Chromium, Firefox, and WebKit**.
+  guard, on **Chromium and Firefox** by default, with **WebKit** available via
+  `pnpm test:e2e:all` (kept opt-in because its browser build won't launch on some
+  environments).
 
 CI (GitHub Actions, `.github/workflows/ci.yml`) runs install → lint → format →
 typecheck → tests → `pnpm audit` → build on every push and PR.
@@ -168,8 +181,5 @@ on the post-auth redirect.
   `.env`; a bare `node .output/server/index.mjs` does not).
 - **Postgres over SQLite** for concurrent writes (the Prisma model ports directly).
 - **Nonce-based CSP** to drop `'unsafe-inline'` for scripts/styles.
-- **Bundle analysis** (`nuxi analyze`). The production client is ~24 tree-shaken
-  chunks (~980 KB raw / ~300 KB gzip), mostly Nuxt UI + the Vue runtime; unused
-  library code is already dropped — a trimming opportunity, not a bug.
 - **E2E in CI** behind a stubbed PokéAPI, so the cross-browser suite runs without a
   live network dependency.
