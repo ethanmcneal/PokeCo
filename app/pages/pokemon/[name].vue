@@ -4,6 +4,11 @@ import type { PokemonDetail } from '#shared/types'
 const route = useRoute()
 const name = computed(() => String(route.params.name))
 
+// Return to the browse view we came from: the page/search/type carried in the
+// query (see PokemonCard). Empty when the page was opened directly, so we land
+// on the default browse view.
+const backTo = computed(() => ({ path: '/', query: route.query }))
+
 // Keyed by the route param so navigating between Pokémon refetches.
 const { data, status, error } = await useFetch<PokemonDetail>(
   () => `/api/pokemon/${route.params.name}`,
@@ -14,7 +19,9 @@ const notFound = computed(() => error.value?.statusCode === 404)
 
 <template>
   <div>
-    <UButton to="/" variant="link" color="neutral" class="mb-4 px-0">← Back to browse</UButton>
+    <UButton :to="backTo" variant="link" color="neutral" class="mb-4 px-0"
+      >← Back to browse</UButton
+    >
 
     <!-- Not found -->
     <div v-if="notFound" class="py-16 text-center">

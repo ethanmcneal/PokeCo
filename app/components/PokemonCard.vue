@@ -2,6 +2,12 @@
 import type { PokemonListItem } from '#shared/types'
 
 defineProps<{ pokemon: PokemonListItem }>()
+
+// Carry the current browse state (page/search/type) onto the detail link so
+// "Back to browse" can return to the exact same view. On the default view the
+// query is empty, so the link stays clean.
+const route = useRoute()
+const detailTo = (name: string) => ({ path: `/pokemon/${name}`, query: route.query })
 </script>
 
 <template>
@@ -9,7 +15,7 @@ defineProps<{ pokemon: PokemonListItem }>()
     <div class="flex flex-col items-center gap-2 text-center">
       <!-- Only the sprite + name navigate; the catch button is a separate control
            (avoids nesting an interactive button inside a link). -->
-      <NuxtLink :to="`/pokemon/${pokemon.name}`" class="flex flex-col items-center gap-2">
+      <NuxtLink :to="detailTo(pokemon.name)" class="flex flex-col items-center gap-2">
         <img
           v-if="pokemon.spriteUrl"
           :src="pokemon.spriteUrl"
