@@ -50,22 +50,24 @@ async function onRelease() {
 
       <!-- Inline confirmation: the Release button is replaced in place by an
            explicit yes/cancel pair, avoiding a heavier modal for a single item. -->
-      <div class="flex flex-shrink-0 items-center gap-2">
-        <template v-if="confirming">
-          <span class="hidden text-sm text-muted sm:inline">Release?</span>
-          <UButton color="error" variant="soft" size="sm" :loading="releasing" @click="onRelease">
-            Yes, release
-          </UButton>
-          <UButton
-            color="neutral"
-            variant="ghost"
-            size="sm"
-            :disabled="releasing"
-            @click="confirming = false"
-          >
-            Cancel
-          </UButton>
-        </template>
+      <div class="flex-shrink-0">
+        <div v-if="confirming" class="flex flex-col items-center gap-1">
+          <span class="text-sm text-muted">Release?</span>
+          <div class="flex items-center gap-2">
+            <UButton color="error" variant="soft" size="sm" :loading="releasing" @click="onRelease">
+              Yes, release
+            </UButton>
+            <UButton
+              color="neutral"
+              variant="ghost"
+              size="sm"
+              :disabled="releasing"
+              @click="confirming = false"
+            >
+              Cancel
+            </UButton>
+          </div>
+        </div>
         <UButton
           v-else
           color="neutral"
