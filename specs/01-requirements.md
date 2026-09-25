@@ -76,7 +76,8 @@ Written so each maps directly to a testable behaviour.
 ### US-2 — Find
 > As a visitor, I can search for a Pokémon by name so I can find one quickly.
 
-- **AC-2.1** Entering a name navigates to / filters to the matching Pokémon.
+- **AC-2.1** Entering a (partial) name filters to the matching Pokémon — a substring match, so
+  `mag` surfaces magnemite, magneton, and magmar.
 - **AC-2.2** A name with no match shows a friendly "not found" state, not an error.
 
 ### US-3 — Explore

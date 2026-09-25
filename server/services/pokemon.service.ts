@@ -4,6 +4,7 @@
 import type { Ability, Page, PokemonDetail, PokemonListItem } from '../../shared/types'
 import type { RawNamedResource, RawPokemon, RawPokemonSpecies } from '../utils/pokeapi'
 import {
+  fetchAllPokemonNames,
   fetchPokemonByName,
   fetchPokemonList,
   fetchPokemonSpecies,
@@ -17,6 +18,16 @@ const SHINY_TYPES: readonly string[] = ['grass']
 
 function toTypes(raw: RawPokemon): string[] {
   return raw.types.map((t) => t.type.name)
+}
+
+// PokéAPI ids >= 10000 are alternate battle forms (mega, regional, etc.), not
+// standard dex entries. We exclude them from search so a query like "mag" can't
+// surface odd forms (e.g. "magearna-mega") or coincidental substrings inside a
+// form name (e.g. "mag" within "squawkabilly-…-plumage").
+const FORM_ID_THRESHOLD = 10000
+
+function idFromUrl(url: string): number {
+  return Number(url.match(/\/pokemon\/(\d+)\/?$/)?.[1] ?? 0)
 }
 
 /** The first entry in the caller's preferred language (English). */
@@ -102,10 +113,15 @@ export async function getPokemonList(opts: ListOptions): Promise<Page<PokemonLis
   const { limit, offset, search, type } = opts
 
   if (search) {
-    // Exact name lookup; no match yields an empty page rather than an error.
-    const raw = await fetchPokemonByName(search).catch(() => null)
-    const items = raw ? [toListItem(raw)] : []
-    return { items, total: items.length, limit, offset }
+    // Substring match over the full name list (PokéAPI has no search endpoint),
+    // kept in national-dex order. No match yields an empty page, not an error.
+    const q = search.trim().toLowerCase()
+    const { results } = await fetchAllPokemonNames()
+    const matches = results.filter(
+      (r) => idFromUrl(r.url) < FORM_ID_THRESHOLD && r.name.includes(q),
+    )
+    const items = await toListItems(matches.slice(offset, offset + limit).map((r) => r.name))
+    return { items, total: matches.length, limit, offset }
   }
 
   if (type) {

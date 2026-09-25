@@ -86,6 +86,21 @@ export const fetchPokemonList = defineCachedFunction(
   },
 )
 
+/**
+ * The full Pokémon name list (national-dex order), fetched once and cached.
+ * PokéAPI has no search endpoint, so substring search filters this list
+ * locally. The large limit returns every entry in a single response.
+ */
+export const fetchAllPokemonNames = defineCachedFunction(
+  (): Promise<RawPokemonListResponse> =>
+    $fetch<RawPokemonListResponse>(`${baseUrl()}/pokemon`, { query: { limit: 100000, offset: 0 } }),
+  {
+    name: 'pokeapi:all-names',
+    maxAge: CACHE_MAX_AGE,
+    getKey: () => 'all',
+  },
+)
+
 /** Full detail for one Pokémon by name (or numeric id). Throws on 404. */
 export const fetchPokemonByName = defineCachedFunction(
   (name: string): Promise<RawPokemon> =>

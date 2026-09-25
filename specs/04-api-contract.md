@@ -78,8 +78,11 @@ string), `type` (optional string — a valid Pokémon type, e.g. `grass`).
 Sourcing depends on the params (handled in `pokemon.service`):
 
 - **No `search`/`type`:** the paginated slice from PokéAPI's list endpoint.
-- **`search`:** resolves the single matching Pokémon by name (case-insensitive) into a one-item
-  page, or an empty page if no match (no error — [AC-2.2](./01-requirements.md)).
+- **`search`:** case-insensitive **substring** match over the full name list (fetched once and
+  cached, since PokéAPI has no search endpoint), kept in national-dex order and paginated by
+  `limit`/`offset`. E.g. `mag` → magnemite, magneton, magmar. Alternate battle forms (PokéAPI ids
+  `>= 10000`) are excluded so the results stay to standard dex entries. No match yields an empty
+  page, not an error ([AC-2.2](./01-requirements.md)).
 - **`type`:** the members of that type (from PokéAPI's `type/{name}` endpoint), paginated by
   `limit`/`offset`. An unknown `type` yields `400`.
 - `search` takes precedence over `type` when both are supplied.
